@@ -306,7 +306,37 @@ div.geo2d-root .geo2d-toolgrid {
   display: grid !important;
   gap: 8px !important;
 }
+div.geo2d-root .geo2d-toolbtn{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  width:100% !important;
+  min-height:42px !important;
+  padding:10px 12px !important;
+  margin:0 !important;
+  border:1px solid #d7dce3 !important;
+  border-radius:10px !important;
+  background:#fff0e6 !important;
+  color:#ff6200 !important;
+  font:700 14px/1.25 'Segoe UI', Arial, sans-serif !important;
+  text-align:left !important;
+  cursor:pointer !important;
+  appearance:none !important;
+  -webkit-appearance:none !important;
+}
 
+div.geo2d-root .geo2d-toolbtn.active{
+  background:#ff6200 !important;
+  color:#fff !important;
+  border-color:#ff6200 !important;
+}
+
+div.geo2d-root .geo2d-toollabel{
+  display:inline !important;
+  color:inherit !important;
+  -webkit-text-fill-color:inherit !important;
+  font:inherit !important;
+}
 
 
       /* =========================================================
@@ -1260,6 +1290,7 @@ div.geo2d-root .geo2d-toolgrid {
       this._objectCounter = this.scene.objects.length + 1;
 
       this.buildLayout();
+      this.refreshToolButtons();
       this.bindUI();
       this.syncJsonFromScene();
       this.render();
