@@ -185,80 +185,101 @@
   /* =========================================================
      PARTE 2. ESTILOS CSS DEL EDITOR
      ========================================================= */
+
 function injectStylesOnce() {
     if (document.getElementById('geo2d-editor-styles')) return;
 
     const style = document.createElement('style');
     style.id = 'geo2d-editor-styles';
     style.textContent = `
-      /* --- Contenedor Principal --- */
+      /* =========================================================
+         RESET Y VARIABLES BLINDADAS CONTRA MOODLE
+         ========================================================= */
       div.geo2d-root {
         --geo-border: #d7dce3;
         --geo-bg: #ffffff;
         --geo-soft: #f6f8fb;
         --geo-text: #1f2937;
         --geo-muted: #6b7280;
-        --geo-primary: #ff6200;
-        --geo-primary-light: #fff0e6;
-        --geo-green: #2e7d32;
-        --geo-blue: #1976d2;
-        --geo-red: #c62828;
-        font-family: Arial, Helvetica, sans-serif !important;
-        color: #1f2937 !important;
-        background-color: #ffffff !important;
-        border: 1px solid #d7dce3 !important;
+        --geo-primary: #ff6200;       /* Tu naranja institucional */
+        --geo-primary-light: #fff0e6; /* Naranja muy suave */
+        
+        all: initial !important; /* Reseteo total del contenedor */
+        display: block !important;
+        font-family: 'Segoe UI', Arial, Helvetica, sans-serif !important;
+        color: var(--geo-text) !important;
+        background-color: var(--geo-bg) !important;
+        border: 1px solid var(--geo-border) !important;
         border-radius: 14px !important;
         overflow: hidden !important;
+        box-sizing: border-box !important;
+        width: 100% !important;
+        line-height: 1.5 !important;
       }
 
-      /* Reseteo seguro de botones para LMS */
-      div.geo2d-root button {
-        appearance: none !important;
-        -webkit-appearance: none !important;
-        background: none !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        font-family: Arial, Helvetica, sans-serif !important;
+      div.geo2d-root * {
         box-sizing: border-box !important;
       }
 
-      /* --- BARRA SUPERIOR --- */
+      /* =========================================================
+         BARRA SUPERIOR (TOOLBAR)
+         ========================================================= */
       div.geo2d-root .geo2d-toolbar {
         display: flex !important;
         gap: 8px !important;
         flex-wrap: wrap !important;
         align-items: center !important;
         padding: 12px !important;
-        background-color: #f6f8fb !important;
-        border-bottom: 1px solid #d7dce3 !important;
+        background-color: var(--geo-soft) !important;
+        border-bottom: 1px solid var(--geo-border) !important;
       }
 
       div.geo2d-root .geo2d-toolbar button,
       div.geo2d-root .geo2d-toolbar select,
       div.geo2d-root .geo2d-toolbar input[type="text"] {
-        border: 1px solid #d7dce3 !important;
-        border-radius: 10px !important;
+        appearance: none !important;
         background-color: #ffffff !important;
-        color: #1f2937 !important;
-        padding: 8px 10px !important;
+        color: var(--geo-text) !important;
+        border: 1px solid var(--geo-border) !important;
+        border-radius: 10px !important;
+        padding: 8px 12px !important;
         font-size: 14px !important;
+        font-family: inherit !important;
         cursor: pointer !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
       }
 
-      /* --- MENÚ LATERAL --- */
+      div.geo2d-root .geo2d-toolbar button:hover {
+        background-color: #f0f0f0 !important;
+      }
+
+      /* =========================================================
+         MENÚ LATERAL DE HERRAMIENTAS
+         ========================================================= */
+      div.geo2d-root .geo2d-body {
+        display: grid !important;
+        grid-template-columns: 180px 1fr !important;
+        min-height: 640px !important;
+      }
+
       div.geo2d-root .geo2d-side {
-        border-right: 1px solid #d7dce3 !important;
+        border-right: 1px solid var(--geo-border) !important;
         background-color: #fbfcfe !important;
         padding: 12px !important;
       }
 
       div.geo2d-root .geo2d-side h3 {
         margin: 0 0 10px 0 !important;
-        font-size: 14px !important;
-        color: #6b7280 !important;
+        font-size: 13px !important;
+        color: var(--geo-muted) !important;
         text-transform: uppercase !important;
-        letter-spacing: .04em !important;
+        letter-spacing: .05em !important;
+        font-weight: bold !important;
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
       }
 
       div.geo2d-root .geo2d-toolgrid {
@@ -266,76 +287,88 @@ function injectStylesOnce() {
         gap: 8px !important;
       }
 
-      /* BOTONES LATERALES INACTIVOS (La solución) */
-      div.geo2d-root div.geo2d-toolgrid button {
+      /* --- BOTONES DE HERRAMIENTA (INACTIVOS) --- */
+      div.geo2d-root .geo2d-toolgrid button {
+        appearance: none !important;
         display: block !important;
         width: 100% !important;
-        border: 1px solid #d7dce3 !important;
-        background-color: #fff0e6 !important; /* Hex naranja claro forzado */
-        color: #ff6200 !important;            /* Hex naranja forzado */
+        background-color: var(--geo-primary-light) !important; /* Naranja claro */
+        color: var(--geo-primary) !important;                  /* Texto Naranja */
+        border: 1px solid var(--geo-border) !important;
         border-radius: 10px !important;
         padding: 10px 12px !important;
         text-align: left !important;
-        cursor: pointer !important;
         font-size: 14px !important;
-        font-weight: bold !important;
-        transition: all 0.2s ease !important;
+        font-weight: 600 !important;
+        cursor: pointer !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+        transition: background-color 0.2s !important;
       }
 
-      div.geo2d-root div.geo2d-toolgrid button:hover:not(.active) {
+      div.geo2d-root .geo2d-toolgrid button:hover:not(.active) {
         background-color: #ffe0cc !important;
       }
 
-      /* BOTÓN LATERAL ACTIVO */
-      div.geo2d-root div.geo2d-toolgrid button.active {
-        background-color: #ff6200 !important;
-        color: #ffffff !important;
-        border-color: #ff6200 !important;
-        box-shadow: 0 2px 4px rgba(255, 98, 0, 0.2) !important;
+      /* --- BOTONES DE HERRAMIENTA (ACTIVOS) --- */
+      div.geo2d-root .geo2d-toolgrid button.active {
+        background-color: var(--geo-primary) !important;       /* Naranja fuerte */
+        color: #ffffff !important;                             /* Texto Blanco */
+        border-color: var(--geo-primary) !important;
+        box-shadow: 0 2px 6px rgba(255, 98, 0, 0.3) !important;
       }
 
-      /* --- PESTAÑAS (VISUAL / JSON) --- */
-      div.geo2d-root .geo2d-tabs {
-        display: flex !important;
-        gap: 8px !important;
-        padding: 12px 12px 0 12px !important;
-        background-color: #ffffff !important;
-      }
-
-      div.geo2d-root .geo2d-tab {
-        border: 1px solid #d7dce3 !important;
-        border-bottom: none !important;
-        border-radius: 10px 10px 0 0 !important;
-        background-color: #f7f9fc !important;
-        color: #6b7280 !important; /* Hex gris forzado */
-        padding: 8px 14px !important;
-        cursor: pointer !important;
-        font-size: 14px !important;
-      }
-
-      div.geo2d-root .geo2d-tab.active {
-        background-color: #ffffff !important;
-        color: #1f2937 !important; /* Hex gris oscuro forzado */
-        font-weight: bold !important;
-      }
-
-      /* --- CONTENEDORES Y OTROS --- */
-      div.geo2d-root .geo2d-body {
-        display: grid !important;
-        grid-template-columns: 180px 1fr !important;
-        min-height: 640px !important;
-      }
-
+      /* =========================================================
+         ÁREA PRINCIPAL Y PESTAÑAS (TABS)
+         ========================================================= */
       div.geo2d-root .geo2d-main {
         display: grid !important;
         grid-template-rows: auto 1fr !important;
         min-width: 0 !important;
       }
 
+      div.geo2d-root .geo2d-tabs {
+        display: flex !important;
+        gap: 8px !important;
+        padding: 12px 12px 0 12px !important;
+        background-color: #ffffff !important;
+        margin: 0 !important;
+        border: none !important;
+      }
+
+      div.geo2d-root .geo2d-tab {
+        appearance: none !important;
+        background-color: #f7f9fc !important;
+        color: var(--geo-muted) !important;
+        border: 1px solid var(--geo-border) !important;
+        border-bottom: none !important;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 8px 16px !important;
+        font-size: 14px !important;
+        font-weight: normal !important;
+        cursor: pointer !important;
+        margin: 0 !important;
+      }
+
+      div.geo2d-root .geo2d-tab.active {
+        background-color: #ffffff !important;
+        color: var(--geo-text) !important;
+        font-weight: bold !important;
+        border-bottom: 1px solid #ffffff !important;
+        margin-bottom: -1px !important; /* Solapa el borde inferior */
+        z-index: 2 !important;
+        position: relative !important;
+      }
+
+      /* =========================================================
+         PANELES DE CONTENIDO (LIENZO SVG Y JSON)
+         ========================================================= */
       div.geo2d-root .geo2d-panels {
-        border-top: 1px solid #d7dce3 !important;
+        border-top: 1px solid var(--geo-border) !important;
         min-height: 0 !important;
         display: grid !important;
+        background-color: #ffffff !important;
       }
 
       div.geo2d-root .geo2d-panel {
@@ -347,8 +380,7 @@ function injectStylesOnce() {
         display: block !important;
       }
 
-      div.geo2d-root .geo2d-visual-wrap,
-      div.geo2d-root .geo2d-json-wrap {
+      div.geo2d-root .geo2d-visual-wrap {
         display: grid !important;
         grid-template-rows: 1fr auto !important;
         height: 100% !important;
@@ -364,50 +396,88 @@ function injectStylesOnce() {
         display: block !important;
         width: 100% !important;
         height: 100% !important;
-        background-color: #ffffff !important;
+        background-color: transparent !important;
         touch-action: none !important;
       }
 
       div.geo2d-root .geo2d-status {
         padding: 10px 12px !important;
-        border-top: 1px solid #d7dce3 !important;
+        border-top: 1px solid var(--geo-border) !important;
         background-color: #fafbfd !important;
-        color: #6b7280 !important;
+        color: var(--geo-muted) !important;
         font-size: 13px !important;
+        margin: 0 !important;
+      }
+
+      div.geo2d-root .geo2d-json-wrap {
+        display: grid !important;
+        grid-template-rows: 1fr auto !important;
+        height: 100% !important;
       }
 
       div.geo2d-root .geo2d-json-wrap textarea {
         width: 100% !important;
-        min-height: 520px !important;
+        min-height: 500px !important;
         resize: vertical !important;
         border: none !important;
         outline: none !important;
         padding: 16px !important;
-        font-family: Consolas, Monaco, monospace !important;
+        font-family: Consolas, Monaco, 'Courier New', monospace !important;
         font-size: 14px !important;
         line-height: 1.5 !important;
-        box-sizing: border-box !important;
         background-color: #ffffff !important;
-        color: #1f2937 !important;
+        color: var(--geo-text) !important;
+        margin: 0 !important;
       }
 
       div.geo2d-root .geo2d-json-actions {
         display: flex !important;
         gap: 8px !important;
         padding: 12px !important;
-        border-top: 1px solid #d7dce3 !important;
+        border-top: 1px solid var(--geo-border) !important;
         background-color: #fafbfd !important;
       }
 
-      /* --- MODAL --- */
+      div.geo2d-root .geo2d-json-actions button {
+        appearance: none !important;
+        background-color: #ffffff !important;
+        color: var(--geo-text) !important;
+        border: 1px solid var(--geo-border) !important;
+        border-radius: 8px !important;
+        padding: 6px 12px !important;
+        cursor: pointer !important;
+      }
+
+      /* =========================================================
+         ELEMENTOS SVG (Textos)
+         ========================================================= */
+      div.geo2d-root .geo2d-legendline {
+        font-size: 12px !important;
+        fill: #374151 !important;
+        font-family: Arial, sans-serif !important;
+      }
+
+      div.geo2d-root .geo2d-measure-label {
+        font-size: 12px !important;
+        fill: #374151 !important;
+        paint-order: stroke !important;
+        stroke: #ffffff !important;
+        stroke-width: 3px !important;
+        font-family: Arial, sans-serif !important;
+        font-weight: bold !important;
+      }
+
+      /* =========================================================
+         MODAL DE PUBLICACIÓN
+         ========================================================= */
       .geo2d-modal-backdrop {
         position: fixed !important;
         inset: 0 !important;
-        background: rgba(0,0,0,.35) !important;
+        background-color: rgba(0,0,0,0.5) !important;
         display: none !important;
         align-items: center !important;
         justify-content: center !important;
-        z-index: 99999 !important;
+        z-index: 999999 !important; /* Muy alto para superar Moodle */
         padding: 16px !important;
       }
 
@@ -419,8 +489,8 @@ function injectStylesOnce() {
         width: min(900px, 96vw) !important;
         max-height: 90vh !important;
         background-color: #ffffff !important;
-        border-radius: 16px !important;
-        box-shadow: 0 20px 60px rgba(0,0,0,.18) !important;
+        border-radius: 12px !important;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.2) !important;
         display: grid !important;
         grid-template-rows: auto 1fr auto !important;
         overflow: hidden !important;
@@ -428,10 +498,9 @@ function injectStylesOnce() {
 
       .geo2d-modal-head,
       .geo2d-modal-foot {
-        padding: 14px 16px !important;
+        padding: 16px !important;
         border-bottom: 1px solid #d7dce3 !important;
-        background-color: #fafbfd !important;
-        color: #1f2937 !important;
+        background-color: #f6f8fb !important;
       }
 
       .geo2d-modal-foot {
@@ -439,45 +508,38 @@ function injectStylesOnce() {
         border-top: 1px solid #d7dce3 !important;
         display: flex !important;
         gap: 8px !important;
-        flex-wrap: wrap !important;
       }
 
-      .geo2d-modal-body {
-        min-height: 0 !important;
-        padding: 0 !important;
+      .geo2d-modal-foot button {
+        appearance: none !important;
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        border: 1px solid #d7dce3 !important;
+        border-radius: 8px !important;
+        padding: 8px 16px !important;
+        cursor: pointer !important;
       }
 
       .geo2d-modal textarea {
         width: 100% !important;
-        height: 58vh !important;
+        height: 50vh !important;
         border: none !important;
         outline: none !important;
         resize: none !important;
         padding: 16px !important;
-        box-sizing: border-box !important;
-        font-family: Consolas, Monaco, monospace !important;
-        font-size: 14px !important;
-        line-height: 1.5 !important;
+        background-color: #ffffff !important;
         color: #1f2937 !important;
+        font-family: Consolas, monospace !important;
+        font-size: 14px !important;
       }
 
       .geo2d-hidden {
         display: none !important;
       }
 
-      .geo2d-legendline {
-        font-size: 12px;
-        fill: #374151;
-      }
-
-      .geo2d-measure-label {
-        font-size: 12px;
-        fill: #374151;
-        paint-order: stroke;
-        stroke: white;
-        stroke-width: 3px;
-      }
-
+      /* =========================================================
+         RESPONSIVE
+         ========================================================= */
       @media (max-width: 900px) {
         div.geo2d-root .geo2d-body {
           grid-template-columns: 1fr !important;
@@ -490,6 +552,9 @@ function injectStylesOnce() {
     `;
     document.head.appendChild(style);
   }
+
+
+   
   /* =========================================================
      PARTE 3. MOTOR DE COORDENADAS Y SVG
      ========================================================= */
