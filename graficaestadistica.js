@@ -1,8 +1,4 @@
-<script>
-if (location.pathname.includes('/mod/book/tool/print/')) {
-  document.documentElement.classList.add('allowprint');
-}
-</script>
+
 
 <script>
   /* ================================================================== */
