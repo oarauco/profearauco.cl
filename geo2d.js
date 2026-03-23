@@ -269,6 +269,7 @@
       .geo2d-toolgrid button {
         border: 1px solid var(--geo-border);
         background: white;
+        color: var(--geo-text);
         border-radius: 10px;
         padding: 10px 12px;
         text-align: left;
