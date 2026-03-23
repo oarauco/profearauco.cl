@@ -225,6 +225,7 @@ div.geo2d-root *::after {
 
 div.geo2d-root button {
   font-family: 'Segoe UI', Arial, Helvetica, sans-serif !important;
+  color: inherit !important;
 }
 
       /* =========================================================
@@ -261,46 +262,45 @@ div.geo2d-root button {
         background-color: #f0f0f0 !important;
       }
 
-      /* =========================================================
-         MENÚ LATERAL DE HERRAMIENTAS
-         ========================================================= */
-      div.geo2d-root .geo2d-body {
-        display: grid !important;
-        grid-template-columns: 180px 1fr !important;
-        min-height: 640px !important;
-      }
+  /* =========================================================
+   MENÚ LATERAL DE HERRAMIENTAS
+   ========================================================= */
+div.geo2d-root .geo2d-body {
+  display: grid !important;
+  grid-template-columns: 180px 1fr !important;
+  min-height: 640px !important;
+}
 
-      div.geo2d-root .geo2d-side {
-        border-right: 1px solid var(--geo-border) !important;
-        background-color: #fbfcfe !important;
-        padding: 12px !important;
-      }
+div.geo2d-root .geo2d-side {
+  border-right: 1px solid var(--geo-border) !important;
+  background-color: #fbfcfe !important;
+  padding: 12px !important;
+}
 
-      div.geo2d-root .geo2d-side h3 {
-        margin: 0 0 10px 0 !important;
-        font-size: 13px !important;
-        color: var(--geo-muted) !important;
-        text-transform: uppercase !important;
-        letter-spacing: .05em !important;
-        font-weight: bold !important;
-        border: none !important;
-        padding: 0 !important;
-        background: transparent !important;
-      }
+div.geo2d-root .geo2d-side h3 {
+  margin: 0 0 10px 0 !important;
+  font-size: 13px !important;
+  color: var(--geo-muted) !important;
+  text-transform: uppercase !important;
+  letter-spacing: .05em !important;
+  font-weight: bold !important;
+  border: none !important;
+  padding: 0 !important;
+  background: transparent !important;
+}
 
-      div.geo2d-root .geo2d-toolgrid {
-        display: grid !important;
-        gap: 8px !important;
-      }
+div.geo2d-root .geo2d-toolgrid {
+  display: grid !important;
+  gap: 8px !important;
+}
 
-
-/* --- BOTONES DE HERRAMIENTA (INACTIVOS) --- */
-div.geo2d-root .geo2d-side .geo2d-toolgrid > button,
-div.geo2d-root .geo2d-side .geo2d-toolgrid > button[data-tool],
-div.geo2d-root .geo2d-side .geo2d-toolgrid > button:not(.active) {
+/* BOTONES DE HERRAMIENTAS */
+div.geo2d-root .geo2d-toolgrid button[data-tool] {
   appearance: none !important;
   -webkit-appearance: none !important;
-  display: block !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-start !important;
   width: 100% !important;
   min-height: 42px !important;
   padding: 10px 12px !important;
@@ -316,47 +316,37 @@ div.geo2d-root .geo2d-side .geo2d-toolgrid > button:not(.active) {
   border: 1px solid #d7dce3 !important;
   border-radius: 10px !important;
 
-  text-align: left !important;
   font: 600 14px/1.25 'Segoe UI', Arial, Helvetica, sans-serif !important;
-  letter-spacing: 0 !important;
+  text-align: left !important;
   text-transform: none !important;
+  letter-spacing: 0 !important;
   text-indent: 0 !important;
   white-space: normal !important;
 
   opacity: 1 !important;
+  visibility: visible !important;
   box-shadow: none !important;
   text-shadow: none !important;
   filter: none !important;
+  cursor: pointer !important;
 }
 
-/* Hover botones inactivos */
-div.geo2d-root .geo2d-side .geo2d-toolgrid > button:hover:not(.active) {
+div.geo2d-root .geo2d-toolgrid button[data-tool]:hover {
   background: #ffe0cc !important;
   background-color: #ffe0cc !important;
   color: #ff6200 !important;
   -webkit-text-fill-color: #ff6200 !important;
 }
 
-/* --- BOTONES DE HERRAMIENTA (ACTIVOS) --- */
-div.geo2d-root .geo2d-side .geo2d-toolgrid > button.active,
-div.geo2d-root .geo2d-side .geo2d-toolgrid > button[data-tool].active {
+div.geo2d-root .geo2d-toolgrid button[data-tool].active {
   background: #ff6200 !important;
   background-color: #ff6200 !important;
   background-image: none !important;
-
   color: #ffffff !important;
   -webkit-text-fill-color: #ffffff !important;
-
   border-color: #ff6200 !important;
-  opacity: 1 !important;
   box-shadow: 0 2px 6px rgba(255, 98, 0, 0.30) !important;
 }
-
-
-
-
-
-
 
 
       /* =========================================================
