@@ -186,7 +186,7 @@
      PARTE 2. ESTILOS CSS DEL EDITOR
      ========================================================= */
 
- function injectStylesOnce() {
+  function injectStylesOnce() {
     if (document.getElementById('geo2d-editor-styles')) return;
 
     const style = document.createElement('style');
@@ -240,6 +240,14 @@
         padding: 12px;
       }
 
+      .geo2d-side h3 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        color: var(--geo-muted);
+        text-transform: uppercase;
+        letter-spacing: .04em;
+      }
+
       .geo2d-toolgrid {
         display: grid;
         gap: 8px;
@@ -273,14 +281,6 @@
         display: grid;
         grid-template-columns: 180px 1fr;
         min-height: 640px;
-      }
-
-      .geo2d-side h3 {
-        margin: 0 0 10px 0;
-        font-size: 14px;
-        color: var(--geo-muted);
-        text-transform: uppercase;
-        letter-spacing: .04em;
       }
 
       .geo2d-main {
