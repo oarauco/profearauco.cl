@@ -185,8 +185,7 @@
   /* =========================================================
      PARTE 2. ESTILOS CSS DEL EDITOR
      ========================================================= */
-
-  function injectStylesOnce() {
+function injectStylesOnce() {
     if (document.getElementById('geo2d-editor-styles')) return;
 
     const style = document.createElement('style');
@@ -211,6 +210,16 @@
         overflow: hidden;
       }
 
+      /* --- RESET AGRESIVO PARA EVITAR CONFLICTOS CON EL LMS --- */
+      .geo2d-root button,
+      .geo2d-root input,
+      .geo2d-root select,
+      .geo2d-root textarea {
+        all: unset !important;
+        box-sizing: border-box !important;
+        font-family: inherit !important;
+      }
+
       .geo2d-toolbar {
         display: flex;
         gap: 8px;
@@ -224,13 +233,13 @@
       .geo2d-toolbar button,
       .geo2d-toolbar select,
       .geo2d-toolbar input[type="text"] {
-        border: 1px solid var(--geo-border);
-        border-radius: 10px;
-        background: white;
-        color: var(--geo-text);
-        padding: 8px 10px;
-        font-size: 14px;
-        cursor: pointer;
+        border: 1px solid var(--geo-border) !important;
+        border-radius: 10px !important;
+        background-color: white !important;
+        color: var(--geo-text) !important;
+        padding: 8px 10px !important;
+        font-size: 14px !important;
+        cursor: pointer !important;
       }
 
       /* --- MENÚ LATERAL (HERRAMIENTAS) --- */
@@ -280,7 +289,7 @@
         border-color: var(--geo-primary) !important;
         box-shadow: 0 2px 4px rgba(255, 98, 0, 0.2) !important;
       }
-     
+      
 
 
 
