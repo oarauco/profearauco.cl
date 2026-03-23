@@ -198,7 +198,9 @@
         --geo-soft: #f6f8fb;
         --geo-text: #1f2937;
         --geo-muted: #6b7280;
-        --geo-primary: #ff6200;
+        --geo-primary: #ff6200;       /* Naranja fuerte (Activo) */
+        --geo-primary-light: #fff0e6; /* Naranja muy suave (Inactivo) */
+        --geo-border: #d7dce3;
         --geo-green: #2e7d32;
         --geo-blue: #1976d2;
         --geo-red: #c62828;
@@ -235,10 +237,22 @@
         cursor: pointer;
       }
 
-      .geo2d-toolbar button.active {
-        background: var(--geo-primary);
+
+
+      .geo2d-toolgrid button {
+        border: 1px solid var(--geo-border);
+        background: var(--geo-primary-light); /* Fondo naranja claro */
+        color: var(--geo-primary);           /* Texto naranja fuerte para que resalte */
+        border-radius: 10px;
+        padding: 10px 12px;
+        text-align: left;
+        cursor: pointer;
+      }
+
+     .geo2d-toolgrid button.active {
+        background: var(--geo-primary);     /* Fondo naranja fuerte */
+        color: white;                       /* Texto blanco */
         border-color: var(--geo-primary);
-        color: white;
       }
 
       .geo2d-body {
@@ -269,7 +283,6 @@
       .geo2d-toolgrid button {
         border: 1px solid var(--geo-border);
         background: white;
-        color: var(--geo-text);
         border-radius: 10px;
         padding: 10px 12px;
         text-align: left;
