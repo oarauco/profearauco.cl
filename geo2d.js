@@ -186,7 +186,7 @@
      PARTE 2. ESTILOS CSS DEL EDITOR
      ========================================================= */
 
-  function injectStylesOnce() {
+ function injectStylesOnce() {
     if (document.getElementById('geo2d-editor-styles')) return;
 
     const style = document.createElement('style');
@@ -198,9 +198,8 @@
         --geo-soft: #f6f8fb;
         --geo-text: #1f2937;
         --geo-muted: #6b7280;
-        --geo-primary: #ff6200;       /* Naranja fuerte (Activo) */
-        --geo-primary-light: #fff0e6; /* Naranja muy suave (Inactivo) */
-        --geo-border: #d7dce3;
+        --geo-primary: #ff6200;       /* Naranja fuerte */
+        --geo-primary-light: #fff0e6; /* Naranja muy suave */
         --geo-green: #2e7d32;
         --geo-blue: #1976d2;
         --geo-red: #c62828;
@@ -231,48 +230,14 @@
         color: var(--geo-text);
         padding: 8px 10px;
         font-size: 14px;
-      }
-
-      .geo2d-toolbar button {
         cursor: pointer;
       }
 
-
-
-      .geo2d-toolgrid button {
-        border: 1px solid var(--geo-border);
-        background: var(--geo-primary-light); /* Fondo naranja claro */
-        color: var(--geo-primary);           /* Texto naranja fuerte para que resalte */
-        border-radius: 10px;
-        padding: 10px 12px;
-        text-align: left;
-        cursor: pointer;
-      }
-
-     .geo2d-toolgrid button.active {
-        background: var(--geo-primary);     /* Fondo naranja fuerte */
-        color: white;                       /* Texto blanco */
-        border-color: var(--geo-primary);
-      }
-
-      .geo2d-body {
-        display: grid;
-        grid-template-columns: 180px 1fr;
-        min-height: 640px;
-      }
-
+      /* --- MENÚ LATERAL (HERRAMIENTAS) --- */
       .geo2d-side {
         border-right: 1px solid var(--geo-border);
         background: #fbfcfe;
         padding: 12px;
-      }
-
-      .geo2d-side h3 {
-        margin: 0 0 10px 0;
-        font-size: 14px;
-        color: var(--geo-muted);
-        text-transform: uppercase;
-        letter-spacing: .04em;
       }
 
       .geo2d-toolgrid {
@@ -282,17 +247,40 @@
 
       .geo2d-toolgrid button {
         border: 1px solid var(--geo-border);
-        background: white;
+        background: var(--geo-primary-light); /* Fondo naranja suave */
+        color: var(--geo-primary);           /* Texto naranja para legibilidad */
         border-radius: 10px;
         padding: 10px 12px;
         text-align: left;
         cursor: pointer;
+        font-size: 14px;
+        transition: all 0.2s ease;
+      }
+
+      .geo2d-toolgrid button:hover:not(.active) {
+        background: #ffe0cc; /* Un toque más oscuro al pasar el mouse */
       }
 
       .geo2d-toolgrid button.active {
-        background: var(--geo-primary);
-        color: white;
+        background: var(--geo-primary);      /* Naranja sólido */
+        color: white;                        /* Texto blanco para contraste */
         border-color: var(--geo-primary);
+        box-shadow: 0 2px 4px rgba(255, 98, 0, 0.2);
+      }
+
+      /* --- RESTO DEL LAYOUT --- */
+      .geo2d-body {
+        display: grid;
+        grid-template-columns: 180px 1fr;
+        min-height: 640px;
+      }
+
+      .geo2d-side h3 {
+        margin: 0 0 10px 0;
+        font-size: 14px;
+        color: var(--geo-muted);
+        text-transform: uppercase;
+        letter-spacing: .04em;
       }
 
       .geo2d-main {
