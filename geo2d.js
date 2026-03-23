@@ -307,63 +307,6 @@ div.geo2d-root .geo2d-toolgrid {
   gap: 8px !important;
 }
 
-/* BOTONES DE HERRAMIENTAS */
-div.geo2d-root .geo2d-toolbtn{
-  appearance:none !important;
-  -webkit-appearance:none !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:flex-start !important;
-  width:100% !important;
-  min-height:42px !important;
-  padding:10px 12px !important;
-  margin:0 !important;
-
-  background:#fff0e6 !important;
-  background-color:#fff0e6 !important;
-  background-image:none !important;
-
-  color:#ff6200 !important;
-  -webkit-text-fill-color:#ff6200 !important;
-
-  border:1px solid #d7dce3 !important;
-  border-radius:10px !important;
-
-  font-family:'Segoe UI', Arial, sans-serif !important;
-  font-size:14px !important;
-  font-weight:700 !important;
-  line-height:1.25 !important;
-  text-align:left !important;
-  text-transform:none !important;
-  letter-spacing:0 !important;
-  text-indent:0 !important;
-  white-space:normal !important;
-
-  cursor:pointer !important;
-  box-shadow:none !important;
-  text-shadow:none !important;
-  filter:none !important;
-  opacity:1 !important;
-  visibility:visible !important;
-}
-
-div.geo2d-root .geo2d-toolbtn:hover{
-  background:#ffe0cc !important;
-  background-color:#ffe0cc !important;
-  background-image:none !important;
-  color:#ff6200 !important;
-  -webkit-text-fill-color:#ff6200 !important;
-}
-
-div.geo2d-root .geo2d-toolbtn.active{
-  background:#ff6200 !important;
-  background-color:#ff6200 !important;
-  background-image:none !important;
-  color:#fff !important;
-  -webkit-text-fill-color:#fff !important;
-  border-color:#ff6200 !important;
-  box-shadow:0 2px 6px rgba(255,98,0,.30) !important;
-}
 
 
       /* =========================================================
@@ -1346,17 +1289,17 @@ div.geo2d-root .geo2d-toolbtn.active{
       <aside class="geo2d-side">
         <h3>Herramientas</h3>
 
-        <div class="geo2d-toolgrid">
-          <button class="geo2d-toolbtn active" data-tool="move" type="button">Mover / Vista</button>
-          <button class="geo2d-toolbtn" data-tool="point" type="button"><span>Punto</span></button>
-          <button class="geo2d-toolbtn" data-tool="segment" type="button">Segmento</button>
-          <button class="geo2d-toolbtn" data-tool="line" type="button">Recta</button>
-          <button class="geo2d-toolbtn" data-tool="circle" type="button">Circunferencia</button>
-          <button class="geo2d-toolbtn" data-tool="polygon" type="button">Polígono</button>
-          <button class="geo2d-toolbtn" data-tool="midpoint" type="button">Punto medio</button>
-          <button class="geo2d-toolbtn" data-tool="measure-distance" type="button">Medir distancia</button>
-          <button class="geo2d-toolbtn" data-tool="delete" type="button">Borrar</button>
-        </div>
+    <div class="geo2d-toolgrid">
+  <button class="geo2d-toolbtn active" data-tool="move" type="button"><span class="geo2d-toollabel">Mover / Vista</span></button>
+  <button class="geo2d-toolbtn" data-tool="point" type="button"><span class="geo2d-toollabel">Punto</span></button>
+  <button class="geo2d-toolbtn" data-tool="segment" type="button"><span class="geo2d-toollabel">Segmento</span></button>
+  <button class="geo2d-toolbtn" data-tool="line" type="button"><span class="geo2d-toollabel">Recta</span></button>
+  <button class="geo2d-toolbtn" data-tool="circle" type="button"><span class="geo2d-toollabel">Circunferencia</span></button>
+  <button class="geo2d-toolbtn" data-tool="polygon" type="button"><span class="geo2d-toollabel">Polígono</span></button>
+  <button class="geo2d-toolbtn" data-tool="midpoint" type="button"><span class="geo2d-toollabel">Punto medio</span></button>
+  <button class="geo2d-toolbtn" data-tool="measure-distance" type="button"><span class="geo2d-toollabel">Medir distancia</span></button>
+  <button class="geo2d-toolbtn" data-tool="delete" type="button"><span class="geo2d-toollabel">Borrar</span></button>
+</div>
       </aside>
 
       <main class="geo2d-main">
@@ -1509,14 +1452,71 @@ div.geo2d-root .geo2d-toolbtn.active{
       });
     }
 
-    setTool(tool) {
-      this.activeTool = tool;
-      this._pendingPoints = [];
-      this.root.querySelectorAll('[data-tool]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tool === tool);
-      });
-      this.setStatus('Herramienta activa: ' + this.toolLabel(tool));
-    }
+applyToolButtonStyle(btn, isActive) {
+  btn.style.setProperty('appearance', 'none', 'important');
+  btn.style.setProperty('-webkit-appearance', 'none', 'important');
+  btn.style.setProperty('display', 'flex', 'important');
+  btn.style.setProperty('align-items', 'center', 'important');
+  btn.style.setProperty('justify-content', 'flex-start', 'important');
+  btn.style.setProperty('width', '100%', 'important');
+  btn.style.setProperty('min-height', '42px', 'important');
+  btn.style.setProperty('padding', '10px 12px', 'important');
+  btn.style.setProperty('margin', '0 0 8px 0', 'important');
+  btn.style.setProperty('border', '1px solid ' + (isActive ? '#ff6200' : '#d7dce3'), 'important');
+  btn.style.setProperty('border-radius', '10px', 'important');
+  btn.style.setProperty('background', isActive ? '#ff6200' : '#fff0e6', 'important');
+  btn.style.setProperty('background-color', isActive ? '#ff6200' : '#fff0e6', 'important');
+  btn.style.setProperty('background-image', 'none', 'important');
+  btn.style.setProperty('color', isActive ? '#ffffff' : '#ff6200', 'important');
+  btn.style.setProperty('-webkit-text-fill-color', isActive ? '#ffffff' : '#ff6200', 'important');
+  btn.style.setProperty('font-family', "'Segoe UI', Arial, sans-serif", 'important');
+  btn.style.setProperty('font-size', '14px', 'important');
+  btn.style.setProperty('font-weight', '700', 'important');
+  btn.style.setProperty('line-height', '1.25', 'important');
+  btn.style.setProperty('text-align', 'left', 'important');
+  btn.style.setProperty('text-transform', 'none', 'important');
+  btn.style.setProperty('letter-spacing', '0', 'important');
+  btn.style.setProperty('text-indent', '0', 'important');
+  btn.style.setProperty('white-space', 'normal', 'important');
+  btn.style.setProperty('cursor', 'pointer', 'important');
+  btn.style.setProperty('box-shadow', isActive ? '0 2px 6px rgba(255,98,0,.30)' : 'none', 'important');
+  btn.style.setProperty('text-shadow', 'none', 'important');
+  btn.style.setProperty('filter', 'none', 'important');
+  btn.style.setProperty('opacity', '1', 'important');
+  btn.style.setProperty('visibility', 'visible', 'important');
+
+  const label = btn.querySelector('.geo2d-toollabel');
+  if (label) {
+    label.style.setProperty('display', 'inline', 'important');
+    label.style.setProperty('visibility', 'visible', 'important');
+    label.style.setProperty('opacity', '1', 'important');
+    label.style.setProperty('color', isActive ? '#ffffff' : '#ff6200', 'important');
+    label.style.setProperty('-webkit-text-fill-color', isActive ? '#ffffff' : '#ff6200', 'important');
+    label.style.setProperty('font-size', '14px', 'important');
+    label.style.setProperty('font-weight', '700', 'important');
+    label.style.setProperty('text-indent', '0', 'important');
+    label.style.setProperty('white-space', 'normal', 'important');
+  }
+}
+
+
+
+
+
+ setTool(tool) {
+  this.activeTool = tool;
+  this._pendingPoints = [];
+
+  this.root.querySelectorAll('[data-tool]').forEach(btn => {
+    const isActive = btn.dataset.tool === tool;
+    btn.classList.toggle('active', isActive);
+    this.applyToolButtonStyle(btn, isActive);
+  });
+
+  this.setStatus('Herramienta activa: ' + this.toolLabel(tool));
+}
+
+
 
     toolLabel(tool) {
       const map = {
@@ -1564,11 +1564,13 @@ div.geo2d-root .geo2d-toolbtn.active{
       this.syncJsonFromScene();
     }
 
-    refreshToolButtons() {
-      this.root.querySelectorAll('[data-tool]').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.tool === this.activeTool);
-      });
-    }
+refreshToolButtons() {
+  this.root.querySelectorAll('[data-tool]').forEach(btn => {
+    const isActive = btn.dataset.tool === this.activeTool;
+    btn.classList.toggle('active', isActive);
+    this.applyToolButtonStyle(btn, isActive);
+  });
+}
 
     /* ---------------------------------------------------------
        SUBPARTE 6.4. ACCIONES DE BOTONES
