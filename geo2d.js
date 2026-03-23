@@ -1348,7 +1348,7 @@ div.geo2d-root .geo2d-toolbtn.active{
 
         <div class="geo2d-toolgrid">
           <button class="geo2d-toolbtn active" data-tool="move" type="button">Mover / Vista</button>
-          <button class="geo2d-toolbtn" data-tool="point" type="button">Punto</button>
+          <button class="geo2d-toolbtn" data-tool="point" type="button"><span>Punto</span></button>
           <button class="geo2d-toolbtn" data-tool="segment" type="button">Segmento</button>
           <button class="geo2d-toolbtn" data-tool="line" type="button">Recta</button>
           <button class="geo2d-toolbtn" data-tool="circle" type="button">Circunferencia</button>
