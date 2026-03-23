@@ -1,5 +1,5 @@
 /* =========================================================
-   GEO2D EDITOR V1
+   GEO2D EDITOR V1 (VERSIÓN BLINDADA PARA MOODLE)
    ---------------------------------------------------------
    Un solo script JavaScript que:
    - crea el layout del editor
@@ -10,22 +10,6 @@
    - expone comandos simples como:
        Geo2D.openEditor(...)
        Geo2D.openViewer(...)
-   ---------------------------------------------------------
-   NOTA HONESTA:
-   Esta V1 es funcional y está pensada como base real.
-   Incluye:
-   - puntos
-   - segmentos
-   - rectas
-   - circunferencias
-   - polígonos
-   - puntos medios
-   - medidas simples
-   - edición visual
-   - edición JSON
-   - publicación HTML
-   ---------------------------------------------------------
-   Está comentada por bloques para que sea fácil de seguir.
    ========================================================= */
 
 (function () {
@@ -186,7 +170,7 @@
      PARTE 2. ESTILOS CSS DEL EDITOR
      ========================================================= */
 
-function injectStylesOnce() {
+  function injectStylesOnce() {
     if (document.getElementById('geo2d-editor-styles')) return;
 
     const style = document.createElement('style');
@@ -201,10 +185,10 @@ function injectStylesOnce() {
         --geo-soft: #f6f8fb;
         --geo-text: #1f2937;
         --geo-muted: #6b7280;
-        --geo-primary: #ff6200;       /* Tu naranja institucional */
-        --geo-primary-light: #fff0e6; /* Naranja muy suave */
+        --geo-primary: #ff6200;       
+        --geo-primary-light: #fff0e6; 
         
-        all: initial !important; /* Reseteo total del contenedor */
+        all: initial !important; 
         display: block !important;
         font-family: 'Segoe UI', Arial, Helvetica, sans-serif !important;
         color: var(--geo-text) !important;
@@ -217,25 +201,15 @@ function injectStylesOnce() {
         line-height: 1.5 !important;
       }
 
-   div.geo2d-root *,
-div.geo2d-root *::before,
-div.geo2d-root *::after {
-  box-sizing: border-box !important;
-}
-
-
+      div.geo2d-root *,
+      div.geo2d-root *::before,
+      div.geo2d-root *::after {
+        box-sizing: border-box !important;
+      }
 
       /* =========================================================
          BARRA SUPERIOR (TOOLBAR)
          ========================================================= */
-
-
-
-
-
-
-
-
       div.geo2d-root .geo2d-toolbar {
         display: flex !important;
         gap: 8px !important;
@@ -246,7 +220,7 @@ div.geo2d-root *::after {
         border-bottom: 1px solid var(--geo-border) !important;
       }
 
-      div.geo2d-root .geo2d-toolbar button,
+      div.geo2d-root .geo2d-toolbar [role="button"],
       div.geo2d-root .geo2d-toolbar select,
       div.geo2d-root .geo2d-toolbar input[type="text"] {
         appearance: none !important;
@@ -261,112 +235,100 @@ div.geo2d-root *::after {
         margin: 0 !important;
         box-shadow: none !important;
         text-shadow: none !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
 
-      div.geo2d-root .geo2d-toolbar button:hover {
+      div.geo2d-root .geo2d-toolbar [role="button"]:hover {
         background-color: #f0f0f0 !important;
       }
 
-  /* =========================================================
-   MENÚ LATERAL DE HERRAMIENTAS
-   ========================================================= */
-div.geo2d-root .geo2d-body {
-  display: grid !important;
-  grid-template-columns: 180px 1fr !important;
-  min-height: 640px !important;
-}
+      /* =========================================================
+         MENÚ LATERAL DE HERRAMIENTAS
+         ========================================================= */
+      div.geo2d-root .geo2d-body {
+        display: grid !important;
+        grid-template-columns: 180px 1fr !important;
+        min-height: 640px !important;
+      }
 
-div.geo2d-root .geo2d-side {
-  border-right: 1px solid var(--geo-border) !important;
-  background-color: #fbfcfe !important;
-  padding: 12px !important;
-}
+      div.geo2d-root .geo2d-side {
+        border-right: 1px solid var(--geo-border) !important;
+        background-color: #fbfcfe !important;
+        padding: 12px !important;
+      }
 
-div.geo2d-root .geo2d-side h3 {
-  margin: 0 0 10px 0 !important;
-  font-size: 13px !important;
-  color: var(--geo-muted) !important;
-  text-transform: uppercase !important;
-  letter-spacing: .05em !important;
-  font-weight: bold !important;
-  border: none !important;
-  padding: 0 !important;
-  background: transparent !important;
-}
+      div.geo2d-root .geo2d-side h3 {
+        margin: 0 0 10px 0 !important;
+        font-size: 13px !important;
+        color: var(--geo-muted) !important;
+        text-transform: uppercase !important;
+        letter-spacing: .05em !important;
+        font-weight: bold !important;
+        border: none !important;
+        padding: 0 !important;
+        background: transparent !important;
+      }
 
-div.geo2d-root .geo2d-toolgrid {
-  display: grid !important;
-  gap: 8px !important;
-}
+      div.geo2d-root .geo2d-toolgrid {
+        display: grid !important;
+        gap: 8px !important;
+      }
 
+      div.geo2d-root .geo2d-toolbtn {
+        all: unset !important;
+        box-sizing: border-box !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-start !important;
+        width: 100% !important;
+        min-height: 42px !important;
+        padding: 10px 12px !important;
+        margin: 0 !important;
+        border: 1px solid #d7dce3 !important;
+        border-radius: 10px !important;
+        background: #fff0e6 !important;
+        background-color: #fff0e6 !important;
+        background-image: none !important;
+        color: #ff6200 !important;
+        -webkit-text-fill-color: #ff6200 !important;
+        font-family: 'Segoe UI', Arial, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        line-height: 1.25 !important;
+        text-align: left !important;
+        text-indent: 0 !important;
+        text-transform: none !important;
+        letter-spacing: 0 !important;
+        white-space: normal !important;
+        overflow: visible !important;
+        cursor: pointer !important;
+        box-shadow: none !important;
+        text-shadow: none !important;
+      }
 
-div.geo2d-root .geo2d-toolbtn{
-  all: unset !important;
-  box-sizing: border-box !important;
-  display:flex !important;
-  align-items:center !important;
-  justify-content:flex-start !important;
-  width:100% !important;
-  min-height:42px !important;
-  padding:10px 12px !important;
-  margin:0 !important;
+      div.geo2d-root .geo2d-toolbtn.active {
+        background: #ff6200 !important;
+        background-color: #ff6200 !important;
+        color: #ffffff !important;
+        -webkit-text-fill-color: #ffffff !important;
+        border-color: #ff6200 !important;
+        box-shadow: 0 2px 6px rgba(255,98,0,.30) !important;
+      }
 
-  border:1px solid #d7dce3 !important;
-  border-radius:10px !important;
-
-  background:#fff0e6 !important;
-  background-color:#fff0e6 !important;
-  background-image:none !important;
-
-  color:#ff6200 !important;
-  -webkit-text-fill-color:#ff6200 !important;
-
-  font-family:'Segoe UI', Arial, sans-serif !important;
-  font-size:14px !important;
-  font-weight:700 !important;
-  line-height:1.25 !important;
-  text-align:left !important;
-
-  text-indent:0 !important;
-  text-transform:none !important;
-  letter-spacing:0 !important;
-  white-space:normal !important;
-  overflow:visible !important;
-  clip:auto !important;
-  clip-path:none !important;
-
-  cursor:pointer !important;
-  box-shadow:none !important;
-  text-shadow:none !important;
-  filter:none !important;
-  opacity:1 !important;
-  visibility:visible !important;
-}
-
-div.geo2d-root .geo2d-toolbtn.active{
-  background:#ff6200 !important;
-  background-color:#ff6200 !important;
-  color:#ffffff !important;
-  -webkit-text-fill-color:#ffffff !important;
-  border-color:#ff6200 !important;
-  box-shadow:0 2px 6px rgba(255,98,0,.30) !important;
-}
-
-div.geo2d-root .geo2d-toollabel{
-  all: unset !important;
-  display:inline !important;
-  color:currentColor !important;
-  -webkit-text-fill-color:currentColor !important;
-  font-family:'Segoe UI', Arial, sans-serif !important;
-  font-size:14px !important;
-  font-weight:700 !important;
-  line-height:1.25 !important;
-  text-indent:0 !important;
-  white-space:normal !important;
-  visibility:visible !important;
-  opacity:1 !important;
-}
-
+      div.geo2d-root .geo2d-toollabel {
+        all: unset !important;
+        display: inline !important;
+        color: currentColor !important;
+        -webkit-text-fill-color: currentColor !important;
+        font-family: 'Segoe UI', Arial, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 700 !important;
+        line-height: 1.25 !important;
+        text-indent: 0 !important;
+        white-space: normal !important;
+      }
 
       /* =========================================================
          ÁREA PRINCIPAL Y PESTAÑAS (TABS)
@@ -386,58 +348,37 @@ div.geo2d-root .geo2d-toollabel{
         border: none !important;
       }
 
-     
+      div.geo2d-root .geo2d-tab {
+        all: unset !important;
+        box-sizing: border-box !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background-color: #f7f9fc !important;
+        color: #6b7280 !important;
+        -webkit-text-fill-color: #6b7280 !important;
+        border: 1px solid var(--geo-border) !important;
+        border-bottom: none !important;
+        border-radius: 10px 10px 0 0 !important;
+        padding: 8px 16px !important;
+        font-family: 'Segoe UI', Arial, sans-serif !important;
+        font-size: 14px !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        cursor: pointer !important;
+      }
 
-     div.geo2d-root .geo2d-tab{
-  all: unset !important;
-  box-sizing: border-box !important;
-  display:inline-flex !important;
-  align-items:center !important;
-  justify-content:center !important;
-
-  background-color:#f7f9fc !important;
-  color:#6b7280 !important;
-  -webkit-text-fill-color:#6b7280 !important;
-
-  border:1px solid var(--geo-border) !important;
-  border-bottom:none !important;
-  border-radius:10px 10px 0 0 !important;
-
-  padding:8px 16px !important;
-  font-family:'Segoe UI', Arial, sans-serif !important;
-  font-size:14px !important;
-  font-weight:600 !important;
-  line-height:1.2 !important;
-
-  text-indent:0 !important;
-  text-transform:none !important;
-  letter-spacing:0 !important;
-  white-space:nowrap !important;
-  overflow:visible !important;
-  clip:auto !important;
-  clip-path:none !important;
-
-  cursor:pointer !important;
-  box-shadow:none !important;
-  text-shadow:none !important;
-  filter:none !important;
-  opacity:1 !important;
-  visibility:visible !important;
-}
-
-div.geo2d-root .geo2d-tab.active{
-  background-color:#ffffff !important;
-  color:#1f2937 !important;
-  -webkit-text-fill-color:#1f2937 !important;
-  font-weight:700 !important;
-  border-bottom:1px solid #ffffff !important;
-  margin-bottom:-1px !important;
-  z-index:2 !important;
-  position:relative !important;
-}
-
-
-
+      div.geo2d-root .geo2d-tab.active {
+        background-color: #ffffff !important;
+        color: #1f2937 !important;
+        -webkit-text-fill-color: #1f2937 !important;
+        font-weight: 700 !important;
+        border-bottom: 1px solid #ffffff !important;
+        margin-bottom: -1px !important;
+        z-index: 2 !important;
+        position: relative !important;
+      }
 
       /* =========================================================
          PANELES DE CONTENIDO (LIENZO SVG Y JSON)
@@ -516,7 +457,7 @@ div.geo2d-root .geo2d-tab.active{
         background-color: #fafbfd !important;
       }
 
-      div.geo2d-root .geo2d-json-actions button {
+      div.geo2d-root .geo2d-json-actions [role="button"] {
         appearance: none !important;
         background-color: #ffffff !important;
         color: var(--geo-text) !important;
@@ -524,6 +465,9 @@ div.geo2d-root .geo2d-tab.active{
         border-radius: 8px !important;
         padding: 6px 12px !important;
         cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
 
       /* =========================================================
@@ -588,7 +532,7 @@ div.geo2d-root .geo2d-tab.active{
         gap: 8px !important;
       }
 
-      .geo2d-modal-foot button {
+      .geo2d-modal-foot [role="button"] {
         appearance: none !important;
         background-color: #ffffff !important;
         color: #1f2937 !important;
@@ -596,6 +540,9 @@ div.geo2d-root .geo2d-tab.active{
         border-radius: 8px !important;
         padding: 8px 16px !important;
         cursor: pointer !important;
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
       }
 
       .geo2d-modal textarea {
@@ -631,8 +578,6 @@ div.geo2d-root .geo2d-tab.active{
     document.head.appendChild(style);
   }
 
-
-   
   /* =========================================================
      PARTE 3. MOTOR DE COORDENADAS Y SVG
      ========================================================= */
@@ -1056,7 +1001,6 @@ div.geo2d-root .geo2d-tab.active{
     const vp = scene.viewport;
     const resolver = resolveScene(scene);
 
-    // --- fondo y grupos
     const gGrid = createSvgEl('g');
     const gAxes = createSvgEl('g');
     const gShapes = createSvgEl('g');
@@ -1066,7 +1010,6 @@ div.geo2d-root .geo2d-tab.active{
 
     svg.append(gGrid, gAxes, gShapes, gMeasures, gPoints, gLabels);
 
-    // --- grilla
     if (vp.showGrid) {
       const sx = niceStep(vp.xMax - vp.xMin);
       const sy = niceStep(vp.yMax - vp.yMin);
@@ -1088,7 +1031,6 @@ div.geo2d-root .geo2d-tab.active{
       }
     }
 
-    // --- ejes
     if (vp.showAxes) {
       if (vp.xMin <= 0 && vp.xMax >= 0) {
         const p = worldToScreen(vp, width, height, 0, 0);
@@ -1106,7 +1048,6 @@ div.geo2d-root .geo2d-tab.active{
       }
     }
 
-    // --- objetos no punto
     for (const { object: obj, resolved } of resolver.allResolved()) {
       if (!obj.visible && obj.visible !== undefined) continue;
       if (!resolved) continue;
@@ -1197,7 +1138,6 @@ div.geo2d-root .geo2d-tab.active{
       }
     }
 
-    // --- puntos y etiquetas
     const pointHitList = [];
 
     for (const { object: obj, resolved } of resolver.allResolved()) {
@@ -1357,109 +1297,100 @@ div.geo2d-root .geo2d-tab.active{
     /* ---------------------------------------------------------
        SUBPARTE 6.1. CONSTRUCCIÓN DEL LAYOUT
        --------------------------------------------------------- */
-
-  
     buildLayout() {
-  this.root = document.createElement('div');
-  this.root.className = 'geo2d-root';
+      this.root = document.createElement('div');
+      this.root.className = 'geo2d-root';
 
-  this.root.innerHTML = `
-    <div class="geo2d-toolbar">
-      <button data-action="new">Nuevo</button>
-      <button data-action="load">Cargar</button>
-      <button data-action="save">Guardar JSON</button>
-      <button data-action="publish">Publicar HTML</button>
-      <button data-action="copyjson">Copiar JSON</button>
-      <span style="flex:1"></span>
-      <input type="text" data-role="title" placeholder="Título de la escena" />
-    </div>
-
-    <div class="geo2d-body">
-      <aside class="geo2d-side">
-        <h3>Herramientas</h3>
-
-    <div class="geo2d-toolgrid">
-  <button class="geo2d-toolbtn active" data-tool="move" type="button"><span class="geo2d-toollabel">Mover / Vista</span></button>
-  <button class="geo2d-toolbtn" data-tool="point" type="button"><span class="geo2d-toollabel">Punto</span></button>
-  <button class="geo2d-toolbtn" data-tool="segment" type="button"><span class="geo2d-toollabel">Segmento</span></button>
-  <button class="geo2d-toolbtn" data-tool="line" type="button"><span class="geo2d-toollabel">Recta</span></button>
-  <button class="geo2d-toolbtn" data-tool="circle" type="button"><span class="geo2d-toollabel">Circunferencia</span></button>
-  <button class="geo2d-toolbtn" data-tool="polygon" type="button"><span class="geo2d-toollabel">Polígono</span></button>
-  <button class="geo2d-toolbtn" data-tool="midpoint" type="button"><span class="geo2d-toollabel">Punto medio</span></button>
-  <button class="geo2d-toolbtn" data-tool="measure-distance" type="button"><span class="geo2d-toollabel">Medir distancia</span></button>
-  <button class="geo2d-toolbtn" data-tool="delete" type="button"><span class="geo2d-toollabel">Borrar</span></button>
-</div>
-      </aside>
-
-      <main class="geo2d-main">
-        <div class="geo2d-tabs">
-          <button class="geo2d-tab active" data-tab="visual" type="button">Visual</button>
-          <button class="geo2d-tab" data-tab="json" type="button">JSON</button>
+      this.root.innerHTML = `
+        <div class="geo2d-toolbar">
+          <div role="button" tabindex="0" data-action="new">Nuevo</div>
+          <div role="button" tabindex="0" data-action="load">Cargar</div>
+          <div role="button" tabindex="0" data-action="save">Guardar JSON</div>
+          <div role="button" tabindex="0" data-action="publish">Publicar HTML</div>
+          <div role="button" tabindex="0" data-action="copyjson">Copiar JSON</div>
+          <span style="flex:1"></span>
+          <input type="text" data-role="title" placeholder="Título de la escena" />
         </div>
 
-        <div class="geo2d-panels">
-          <section class="geo2d-panel active" data-panel="visual">
-            <div class="geo2d-visual-wrap">
-              <div class="geo2d-canvas-wrap">
-                <svg></svg>
-              </div>
-              <div class="geo2d-status" data-role="status">Listo.</div>
+        <div class="geo2d-body">
+          <aside class="geo2d-side">
+            <h3>Herramientas</h3>
+            <div class="geo2d-toolgrid">
+              <div class="geo2d-toolbtn active" data-tool="move" role="button" tabindex="0"><span class="geo2d-toollabel">Mover / Vista</span></div>
+              <div class="geo2d-toolbtn" data-tool="point" role="button" tabindex="0"><span class="geo2d-toollabel">Punto</span></div>
+              <div class="geo2d-toolbtn" data-tool="segment" role="button" tabindex="0"><span class="geo2d-toollabel">Segmento</span></div>
+              <div class="geo2d-toolbtn" data-tool="line" role="button" tabindex="0"><span class="geo2d-toollabel">Recta</span></div>
+              <div class="geo2d-toolbtn" data-tool="circle" role="button" tabindex="0"><span class="geo2d-toollabel">Circunferencia</span></div>
+              <div class="geo2d-toolbtn" data-tool="polygon" role="button" tabindex="0"><span class="geo2d-toollabel">Polígono</span></div>
+              <div class="geo2d-toolbtn" data-tool="midpoint" role="button" tabindex="0"><span class="geo2d-toollabel">Punto medio</span></div>
+              <div class="geo2d-toolbtn" data-tool="measure-distance" role="button" tabindex="0"><span class="geo2d-toollabel">Medir distancia</span></div>
+              <div class="geo2d-toolbtn" data-tool="delete" role="button" tabindex="0"><span class="geo2d-toollabel">Borrar</span></div>
             </div>
-          </section>
+          </aside>
 
-          <section class="geo2d-panel" data-panel="json">
-            <div class="geo2d-json-wrap">
-              <textarea spellcheck="false"></textarea>
-              <div class="geo2d-json-actions">
-                <button data-action="apply-json" type="button">Aplicar cambios</button>
-                <button data-action="format-json" type="button">Formatear JSON</button>
-              </div>
+          <main class="geo2d-main">
+            <div class="geo2d-tabs">
+              <div class="geo2d-tab active" data-tab="visual" role="button" tabindex="0">Visual</div>
+              <div class="geo2d-tab" data-tab="json" role="button" tabindex="0">JSON</div>
             </div>
-          </section>
+
+            <div class="geo2d-panels">
+              <section class="geo2d-panel active" data-panel="visual">
+                <div class="geo2d-visual-wrap">
+                  <div class="geo2d-canvas-wrap">
+                    <svg></svg>
+                  </div>
+                  <div class="geo2d-status" data-role="status">Listo.</div>
+                </div>
+              </section>
+
+              <section class="geo2d-panel" data-panel="json">
+                <div class="geo2d-json-wrap">
+                  <textarea spellcheck="false"></textarea>
+                  <div class="geo2d-json-actions">
+                    <div role="button" tabindex="0" data-action="apply-json">Aplicar cambios</div>
+                    <div role="button" tabindex="0" data-action="format-json">Formatear JSON</div>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </main>
         </div>
-      </main>
-    </div>
 
-    <div class="geo2d-modal-backdrop">
-      <div class="geo2d-modal">
-        <div class="geo2d-modal-head"><strong>Publicar HTML</strong></div>
-        <div class="geo2d-modal-body">
-          <textarea spellcheck="false" readonly></textarea>
+        <div class="geo2d-modal-backdrop">
+          <div class="geo2d-modal">
+            <div class="geo2d-modal-head"><strong>Publicar HTML</strong></div>
+            <div class="geo2d-modal-body">
+              <textarea spellcheck="false" readonly></textarea>
+            </div>
+            <div class="geo2d-modal-foot">
+              <div role="button" tabindex="0" data-action="copy-published">Copiar HTML</div>
+              <div role="button" tabindex="0" data-action="download-published">Descargar HTML</div>
+              <div role="button" tabindex="0" data-action="close-modal">Cerrar</div>
+            </div>
+          </div>
         </div>
-        <div class="geo2d-modal-foot">
-          <button data-action="copy-published" type="button">Copiar HTML</button>
-          <button data-action="download-published" type="button">Descargar HTML</button>
-          <button data-action="close-modal" type="button">Cerrar</button>
-        </div>
-      </div>
-    </div>
-  `;
+      `;
 
-  this.targetEl.innerHTML = '';
-  this.targetEl.appendChild(this.root);
+      this.targetEl.innerHTML = '';
+      this.targetEl.appendChild(this.root);
 
-  this.svg = this.root.querySelector('svg');
-  this.statusEl = this.root.querySelector('[data-role="status"]');
-  this.titleInput = this.root.querySelector('[data-role="title"]');
-  this.jsonArea = this.root.querySelector('.geo2d-json-wrap textarea');
-  this.modalBackdrop = this.root.querySelector('.geo2d-modal-backdrop');
-  this.publishArea = this.root.querySelector('.geo2d-modal textarea');
+      this.svg = this.root.querySelector('svg');
+      this.statusEl = this.root.querySelector('[data-role="status"]');
+      this.titleInput = this.root.querySelector('[data-role="title"]');
+      this.jsonArea = this.root.querySelector('.geo2d-json-wrap textarea');
+      this.modalBackdrop = this.root.querySelector('.geo2d-modal-backdrop');
+      this.publishArea = this.root.querySelector('.geo2d-modal textarea');
 
-  this.titleInput.value = this.scene.meta.title || '';
-}
-
-
-
-
-
+      this.titleInput.value = this.scene.meta.title || '';
+    }
 
     /* ---------------------------------------------------------
        SUBPARTE 6.2. EVENTOS DE INTERFAZ
        --------------------------------------------------------- */
-
     bindUI() {
       this.root.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
+        const btn = e.target.closest('[data-action], [data-tool], [data-tab]');
         if (!btn) return;
 
         const action = btn.dataset.action;
@@ -1525,7 +1456,6 @@ div.geo2d-root .geo2d-tab.active{
     /* ---------------------------------------------------------
        SUBPARTE 6.3. GESTIÓN DE ESTADO GENERAL
        --------------------------------------------------------- */
-
     setStatus(text, isError = false) {
       this.statusEl.textContent = text;
       this.statusEl.style.color = isError ? '#c62828' : '#6b7280';
@@ -1541,71 +1471,17 @@ div.geo2d-root .geo2d-tab.active{
       });
     }
 
-applyToolButtonStyle(btn, isActive) {
-  btn.style.setProperty('appearance', 'none', 'important');
-  btn.style.setProperty('-webkit-appearance', 'none', 'important');
-  btn.style.setProperty('display', 'flex', 'important');
-  btn.style.setProperty('align-items', 'center', 'important');
-  btn.style.setProperty('justify-content', 'flex-start', 'important');
-  btn.style.setProperty('width', '100%', 'important');
-  btn.style.setProperty('min-height', '42px', 'important');
-  btn.style.setProperty('padding', '10px 12px', 'important');
-  btn.style.setProperty('margin', '0 0 8px 0', 'important');
-  btn.style.setProperty('border', '1px solid ' + (isActive ? '#ff6200' : '#d7dce3'), 'important');
-  btn.style.setProperty('border-radius', '10px', 'important');
-  btn.style.setProperty('background', isActive ? '#ff6200' : '#fff0e6', 'important');
-  btn.style.setProperty('background-color', isActive ? '#ff6200' : '#fff0e6', 'important');
-  btn.style.setProperty('background-image', 'none', 'important');
-  btn.style.setProperty('color', isActive ? '#ffffff' : '#ff6200', 'important');
-  btn.style.setProperty('-webkit-text-fill-color', isActive ? '#ffffff' : '#ff6200', 'important');
-  btn.style.setProperty('font-family', "'Segoe UI', Arial, sans-serif", 'important');
-  btn.style.setProperty('font-size', '14px', 'important');
-  btn.style.setProperty('font-weight', '700', 'important');
-  btn.style.setProperty('line-height', '1.25', 'important');
-  btn.style.setProperty('text-align', 'left', 'important');
-  btn.style.setProperty('text-transform', 'none', 'important');
-  btn.style.setProperty('letter-spacing', '0', 'important');
-  btn.style.setProperty('text-indent', '0', 'important');
-  btn.style.setProperty('white-space', 'normal', 'important');
-  btn.style.setProperty('cursor', 'pointer', 'important');
-  btn.style.setProperty('box-shadow', isActive ? '0 2px 6px rgba(255,98,0,.30)' : 'none', 'important');
-  btn.style.setProperty('text-shadow', 'none', 'important');
-  btn.style.setProperty('filter', 'none', 'important');
-  btn.style.setProperty('opacity', '1', 'important');
-  btn.style.setProperty('visibility', 'visible', 'important');
+    setTool(tool) {
+      this.activeTool = tool;
+      this._pendingPoints = [];
 
-  const label = btn.querySelector('.geo2d-toollabel');
-  if (label) {
-    label.style.setProperty('display', 'inline', 'important');
-    label.style.setProperty('visibility', 'visible', 'important');
-    label.style.setProperty('opacity', '1', 'important');
-    label.style.setProperty('color', isActive ? '#ffffff' : '#ff6200', 'important');
-    label.style.setProperty('-webkit-text-fill-color', isActive ? '#ffffff' : '#ff6200', 'important');
-    label.style.setProperty('font-size', '14px', 'important');
-    label.style.setProperty('font-weight', '700', 'important');
-    label.style.setProperty('text-indent', '0', 'important');
-    label.style.setProperty('white-space', 'normal', 'important');
-  }
-}
+      this.root.querySelectorAll('[data-tool]').forEach(btn => {
+        const isActive = btn.dataset.tool === tool;
+        btn.classList.toggle('active', isActive);
+      });
 
-
-
-
-
- setTool(tool) {
-  this.activeTool = tool;
-  this._pendingPoints = [];
-
-  this.root.querySelectorAll('[data-tool]').forEach(btn => {
-    const isActive = btn.dataset.tool === tool;
-    btn.classList.toggle('active', isActive);
-    this.applyToolButtonStyle(btn, isActive);
-  });
-
-  this.setStatus('Herramienta activa: ' + this.toolLabel(tool));
-}
-
-
+      this.setStatus('Herramienta activa: ' + this.toolLabel(tool));
+    }
 
     toolLabel(tool) {
       const map = {
@@ -1653,18 +1529,16 @@ applyToolButtonStyle(btn, isActive) {
       this.syncJsonFromScene();
     }
 
-refreshToolButtons() {
-  this.root.querySelectorAll('[data-tool]').forEach(btn => {
-    const isActive = btn.dataset.tool === this.activeTool;
-    btn.classList.toggle('active', isActive);
-    this.applyToolButtonStyle(btn, isActive);
-  });
-}
+    refreshToolButtons() {
+      this.root.querySelectorAll('[data-tool]').forEach(btn => {
+        const isActive = btn.dataset.tool === this.activeTool;
+        btn.classList.toggle('active', isActive);
+      });
+    }
 
     /* ---------------------------------------------------------
        SUBPARTE 6.4. ACCIONES DE BOTONES
        --------------------------------------------------------- */
-
     handleAction(action) {
       switch (action) {
         case 'new':
@@ -1776,7 +1650,6 @@ refreshToolButtons() {
     /* ---------------------------------------------------------
        SUBPARTE 6.5. INTERACCIÓN CON EL SVG
        --------------------------------------------------------- */
-
     getMouseWorld(e) {
       const r = this.svg.getBoundingClientRect();
       const sx = e.clientX - r.left;
@@ -1880,7 +1753,6 @@ refreshToolButtons() {
     /* ---------------------------------------------------------
        SUBPARTE 6.6. HERRAMIENTAS DE CONSTRUCCIÓN
        --------------------------------------------------------- */
-
     handleConstructionClick(world, nearPoint) {
       const selectedId = nearPoint ? nearPoint.id : this.addPoint(world.x, world.y, false);
 
@@ -2162,7 +2034,7 @@ refreshToolButtons() {
         <div class="geo2d-toolbar">
           <strong>${escapeHtml(this.scene.meta.title || 'Visor Geo2D')}</strong>
           <span style="flex:1"></span>
-          <button data-action="copyjson">Copiar código</button>
+          <div role="button" tabindex="0" data-action="copyjson">Copiar código</div>
         </div>
         <div class="geo2d-canvas-wrap" style="min-height:520px">
           <svg></svg>
@@ -2175,7 +2047,7 @@ refreshToolButtons() {
       this.svg = this.root.querySelector('svg');
 
       this.root.addEventListener('click', (e) => {
-        const btn = e.target.closest('button');
+        const btn = e.target.closest('[data-action]');
         if (!btn) return;
         if (btn.dataset.action === 'copyjson') {
           copyTextToClipboard(jsonPretty(this.scene));
