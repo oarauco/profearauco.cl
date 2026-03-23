@@ -223,15 +223,7 @@ div.geo2d-root *::after {
   box-sizing: border-box !important;
 }
 
-div.geo2d-root button {
-  font-family: 'Segoe UI', Arial, Helvetica, sans-serif !important;
-  color: inherit !important;
-}
 
-div.geo2d-root button span{
-  color:inherit !important;
-  -webkit-text-fill-color:inherit !important;
-}
 
       /* =========================================================
          BARRA SUPERIOR (TOOLBAR)
@@ -306,7 +298,11 @@ div.geo2d-root .geo2d-toolgrid {
   display: grid !important;
   gap: 8px !important;
 }
+
+
 div.geo2d-root .geo2d-toolbtn{
+  all: unset !important;
+  box-sizing: border-box !important;
   display:flex !important;
   align-items:center !important;
   justify-content:flex-start !important;
@@ -314,28 +310,61 @@ div.geo2d-root .geo2d-toolbtn{
   min-height:42px !important;
   padding:10px 12px !important;
   margin:0 !important;
+
   border:1px solid #d7dce3 !important;
   border-radius:10px !important;
+
   background:#fff0e6 !important;
+  background-color:#fff0e6 !important;
+  background-image:none !important;
+
   color:#ff6200 !important;
-  font:700 14px/1.25 'Segoe UI', Arial, sans-serif !important;
+  -webkit-text-fill-color:#ff6200 !important;
+
+  font-family:'Segoe UI', Arial, sans-serif !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  line-height:1.25 !important;
   text-align:left !important;
+
+  text-indent:0 !important;
+  text-transform:none !important;
+  letter-spacing:0 !important;
+  white-space:normal !important;
+  overflow:visible !important;
+  clip:auto !important;
+  clip-path:none !important;
+
   cursor:pointer !important;
-  appearance:none !important;
-  -webkit-appearance:none !important;
+  box-shadow:none !important;
+  text-shadow:none !important;
+  filter:none !important;
+  opacity:1 !important;
+  visibility:visible !important;
 }
 
 div.geo2d-root .geo2d-toolbtn.active{
   background:#ff6200 !important;
-  color:#fff !important;
+  background-color:#ff6200 !important;
+  color:#ffffff !important;
+  -webkit-text-fill-color:#ffffff !important;
   border-color:#ff6200 !important;
+  box-shadow:0 2px 6px rgba(255,98,0,.30) !important;
 }
 
 div.geo2d-root .geo2d-toollabel{
+  all: unset !important;
   display:inline !important;
-  color:inherit !important;
-  -webkit-text-fill-color:inherit !important;
-  font:inherit !important;
+  color:currentColor !important;
+  -webkit-text-fill-color:currentColor !important;
+  font-family:'Segoe UI', Arial, sans-serif !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  line-height:1.25 !important;
+  text-indent:0 !important;
+  white-space:normal !important;
+  visibility:visible !important;
+  opacity:1 !important;
 }
 
 
@@ -357,29 +386,58 @@ div.geo2d-root .geo2d-toollabel{
         border: none !important;
       }
 
-      div.geo2d-root .geo2d-tab {
-        appearance: none !important;
-        background-color: #f7f9fc !important;
-        color: var(--geo-muted) !important;
-        border: 1px solid var(--geo-border) !important;
-        border-bottom: none !important;
-        border-radius: 10px 10px 0 0 !important;
-        padding: 8px 16px !important;
-        font-size: 14px !important;
-        font-weight: normal !important;
-        cursor: pointer !important;
-        margin: 0 !important;
-      }
+     
 
-      div.geo2d-root .geo2d-tab.active {
-        background-color: #ffffff !important;
-        color: var(--geo-text) !important;
-        font-weight: bold !important;
-        border-bottom: 1px solid #ffffff !important;
-        margin-bottom: -1px !important; /* Solapa el borde inferior */
-        z-index: 2 !important;
-        position: relative !important;
-      }
+     div.geo2d-root .geo2d-tab{
+  all: unset !important;
+  box-sizing: border-box !important;
+  display:inline-flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+
+  background-color:#f7f9fc !important;
+  color:#6b7280 !important;
+  -webkit-text-fill-color:#6b7280 !important;
+
+  border:1px solid var(--geo-border) !important;
+  border-bottom:none !important;
+  border-radius:10px 10px 0 0 !important;
+
+  padding:8px 16px !important;
+  font-family:'Segoe UI', Arial, sans-serif !important;
+  font-size:14px !important;
+  font-weight:600 !important;
+  line-height:1.2 !important;
+
+  text-indent:0 !important;
+  text-transform:none !important;
+  letter-spacing:0 !important;
+  white-space:nowrap !important;
+  overflow:visible !important;
+  clip:auto !important;
+  clip-path:none !important;
+
+  cursor:pointer !important;
+  box-shadow:none !important;
+  text-shadow:none !important;
+  filter:none !important;
+  opacity:1 !important;
+  visibility:visible !important;
+}
+
+div.geo2d-root .geo2d-tab.active{
+  background-color:#ffffff !important;
+  color:#1f2937 !important;
+  -webkit-text-fill-color:#1f2937 !important;
+  font-weight:700 !important;
+  border-bottom:1px solid #ffffff !important;
+  margin-bottom:-1px !important;
+  z-index:2 !important;
+  position:relative !important;
+}
+
+
+
 
       /* =========================================================
          PANELES DE CONTENIDO (LIENZO SVG Y JSON)
