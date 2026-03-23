@@ -228,6 +228,11 @@ div.geo2d-root button {
   color: inherit !important;
 }
 
+div.geo2d-root button span{
+  color:inherit !important;
+  -webkit-text-fill-color:inherit !important;
+}
+
       /* =========================================================
          BARRA SUPERIOR (TOOLBAR)
          ========================================================= */
@@ -304,34 +309,60 @@ div.geo2d-root .geo2d-toolgrid {
 
 /* BOTONES DE HERRAMIENTAS */
 div.geo2d-root .geo2d-toolbtn{
-  display:block !important;
+  appearance:none !important;
+  -webkit-appearance:none !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
   width:100% !important;
   min-height:42px !important;
   padding:10px 12px !important;
-  margin:0 0 8px 0 !important;
+  margin:0 !important;
+
+  background:#fff0e6 !important;
+  background-color:#fff0e6 !important;
+  background-image:none !important;
+
+  color:#ff6200 !important;
+  -webkit-text-fill-color:#ff6200 !important;
+
   border:1px solid #d7dce3 !important;
   border-radius:10px !important;
-  background:#fff0e6 !important;
-  color:#ff6200 !important;
+
   font-family:'Segoe UI', Arial, sans-serif !important;
   font-size:14px !important;
   font-weight:700 !important;
+  line-height:1.25 !important;
   text-align:left !important;
+  text-transform:none !important;
+  letter-spacing:0 !important;
+  text-indent:0 !important;
+  white-space:normal !important;
+
   cursor:pointer !important;
   box-shadow:none !important;
-  appearance:none !important;
-  -webkit-appearance:none !important;
+  text-shadow:none !important;
+  filter:none !important;
+  opacity:1 !important;
+  visibility:visible !important;
 }
 
 div.geo2d-root .geo2d-toolbtn:hover{
   background:#ffe0cc !important;
+  background-color:#ffe0cc !important;
+  background-image:none !important;
   color:#ff6200 !important;
+  -webkit-text-fill-color:#ff6200 !important;
 }
 
 div.geo2d-root .geo2d-toolbtn.active{
   background:#ff6200 !important;
+  background-color:#ff6200 !important;
+  background-image:none !important;
   color:#fff !important;
+  -webkit-text-fill-color:#fff !important;
   border-color:#ff6200 !important;
+  box-shadow:0 2px 6px rgba(255,98,0,.30) !important;
 }
 
 
