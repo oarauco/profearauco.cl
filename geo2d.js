@@ -217,9 +217,11 @@ function injectStylesOnce() {
         line-height: 1.5 !important;
       }
 
-      div.geo2d-root * {
-        box-sizing: border-box !important;
-      }
+   div.geo2d-root *,
+div.geo2d-root *::before,
+div.geo2d-root *::after {
+  box-sizing: border-box !important;
+}
 
       /* =========================================================
          BARRA SUPERIOR (TOOLBAR)
@@ -287,37 +289,71 @@ function injectStylesOnce() {
         gap: 8px !important;
       }
 
-      /* --- BOTONES DE HERRAMIENTA (INACTIVOS) --- */
-      div.geo2d-root .geo2d-toolgrid button {
-        appearance: none !important;
-        display: block !important;
-        width: 100% !important;
-        background-color: var(--geo-primary-light) !important; /* Naranja claro */
-        color: var(--geo-primary) !important;                  /* Texto Naranja */
-        border: 1px solid var(--geo-border) !important;
-        border-radius: 10px !important;
-        padding: 10px 12px !important;
-        text-align: left !important;
-        font-size: 14px !important;
-        font-weight: 600 !important;
-        cursor: pointer !important;
-        margin: 0 !important;
-        box-shadow: none !important;
-        text-shadow: none !important;
-        transition: background-color 0.2s !important;
-      }
 
-      div.geo2d-root .geo2d-toolgrid button:hover:not(.active) {
-        background-color: #ffe0cc !important;
-      }
+/* --- BOTONES DE HERRAMIENTA (INACTIVOS) --- */
+div.geo2d-root .geo2d-side .geo2d-toolgrid > button,
+div.geo2d-root .geo2d-side .geo2d-toolgrid > button[data-tool],
+div.geo2d-root .geo2d-side .geo2d-toolgrid > button:not(.active) {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  display: block !important;
+  width: 100% !important;
+  min-height: 42px !important;
+  padding: 10px 12px !important;
+  margin: 0 !important;
 
-      /* --- BOTONES DE HERRAMIENTA (ACTIVOS) --- */
-      div.geo2d-root .geo2d-toolgrid button.active {
-        background-color: var(--geo-primary) !important;       /* Naranja fuerte */
-        color: #ffffff !important;                             /* Texto Blanco */
-        border-color: var(--geo-primary) !important;
-        box-shadow: 0 2px 6px rgba(255, 98, 0, 0.3) !important;
-      }
+  background: #fff0e6 !important;
+  background-color: #fff0e6 !important;
+  background-image: none !important;
+
+  color: #ff6200 !important;
+  -webkit-text-fill-color: #ff6200 !important;
+
+  border: 1px solid #d7dce3 !important;
+  border-radius: 10px !important;
+
+  text-align: left !important;
+  font: 600 14px/1.25 'Segoe UI', Arial, Helvetica, sans-serif !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  text-indent: 0 !important;
+  white-space: normal !important;
+
+  opacity: 1 !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  filter: none !important;
+}
+
+/* Hover botones inactivos */
+div.geo2d-root .geo2d-side .geo2d-toolgrid > button:hover:not(.active) {
+  background: #ffe0cc !important;
+  background-color: #ffe0cc !important;
+  color: #ff6200 !important;
+  -webkit-text-fill-color: #ff6200 !important;
+}
+
+/* --- BOTONES DE HERRAMIENTA (ACTIVOS) --- */
+div.geo2d-root .geo2d-side .geo2d-toolgrid > button.active,
+div.geo2d-root .geo2d-side .geo2d-toolgrid > button[data-tool].active {
+  background: #ff6200 !important;
+  background-color: #ff6200 !important;
+  background-image: none !important;
+
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+
+  border-color: #ff6200 !important;
+  opacity: 1 !important;
+  box-shadow: 0 2px 6px rgba(255, 98, 0, 0.30) !important;
+}
+
+
+
+
+
+
+
 
       /* =========================================================
          ÁREA PRINCIPAL Y PESTAÑAS (TABS)
