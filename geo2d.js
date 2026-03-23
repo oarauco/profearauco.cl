@@ -223,6 +223,10 @@ div.geo2d-root *::after {
   box-sizing: border-box !important;
 }
 
+div.geo2d-root button {
+  font-family: 'Segoe UI', Arial, Helvetica, sans-serif !important;
+}
+
       /* =========================================================
          BARRA SUPERIOR (TOOLBAR)
          ========================================================= */
