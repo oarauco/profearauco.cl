@@ -253,28 +253,36 @@
         gap: 8px;
       }
 
-      .geo2d-toolgrid button {
-        border: 1px solid var(--geo-border);
-        background: var(--geo-primary-light); /* Fondo naranja suave */
-        color: var(--geo-primary);           /* Texto naranja para legibilidad */
-        border-radius: 10px;
-        padding: 10px 12px;
-        text-align: left;
-        cursor: pointer;
-        font-size: 14px;
-        transition: all 0.2s ease;
+
+     .geo2d-root .geo2d-toolgrid button {
+        border: 1px solid var(--geo-border) !important;
+        background-color: var(--geo-primary-light) !important;
+        color: var(--geo-primary) !important;
+        border-radius: 10px !important;
+        padding: 10px 12px !important;
+        text-align: left !important;
+        cursor: pointer !important;
+        font-size: 14px !important;
+        font-weight: bold !important; /* Para que resalte más el texto naranja */
+        transition: all 0.2s ease !important;
       }
 
-      .geo2d-toolgrid button:hover:not(.active) {
-        background: #ffe0cc; /* Un toque más oscuro al pasar el mouse */
+
+
+    .geo2d-root .geo2d-toolgrid button:hover:not(.active) {
+        background-color: #ffe0cc !important;
       }
 
-      .geo2d-toolgrid button.active {
-        background: var(--geo-primary);      /* Naranja sólido */
-        color: white;                        /* Texto blanco para contraste */
-        border-color: var(--geo-primary);
-        box-shadow: 0 2px 4px rgba(255, 98, 0, 0.2);
+
+.geo2d-root .geo2d-toolgrid button.active {
+        background-color: var(--geo-primary) !important;
+        color: #ffffff !important;
+        border-color: var(--geo-primary) !important;
+        box-shadow: 0 2px 4px rgba(255, 98, 0, 0.2) !important;
       }
+     
+
+
 
       /* --- RESTO DEL LAYOUT --- */
       .geo2d-body {
@@ -289,26 +297,28 @@
         min-width: 0;
       }
 
-      .geo2d-tabs {
+.geo2d-root .geo2d-tabs {
         display: flex;
         gap: 8px;
         padding: 12px 12px 0 12px;
         background: white;
       }
 
-      .geo2d-tab {
-        border: 1px solid var(--geo-border);
-        border-bottom: none;
-        border-radius: 10px 10px 0 0;
-        background: #f7f9fc;
-        padding: 8px 14px;
-        cursor: pointer;
-        font-size: 14px;
+.geo2d-root .geo2d-tab {
+        border: 1px solid var(--geo-border) !important;
+        border-bottom: none !important;
+        border-radius: 10px 10px 0 0 !important;
+        background-color: #f7f9fc !important;
+        color: var(--geo-muted) !important;
+        padding: 8px 14px !important;
+        cursor: pointer !important;
+        font-size: 14px !important;
       }
 
-      .geo2d-tab.active {
-        background: white;
-        font-weight: bold;
+.geo2d-root .geo2d-tab.active {
+        background-color: white !important;
+        color: var(--geo-text) !important;
+        font-weight: bold !important;
       }
 
       .geo2d-panels {
