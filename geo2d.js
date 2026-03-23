@@ -231,6 +231,14 @@ div.geo2d-root button {
       /* =========================================================
          BARRA SUPERIOR (TOOLBAR)
          ========================================================= */
+
+
+
+
+
+
+
+
       div.geo2d-root .geo2d-toolbar {
         display: flex !important;
         gap: 8px !important;
@@ -295,57 +303,35 @@ div.geo2d-root .geo2d-toolgrid {
 }
 
 /* BOTONES DE HERRAMIENTAS */
-div.geo2d-root .geo2d-toolgrid button[data-tool] {
-  appearance: none !important;
-  -webkit-appearance: none !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: flex-start !important;
-  width: 100% !important;
-  min-height: 42px !important;
-  padding: 10px 12px !important;
-  margin: 0 !important;
-
-  background: #fff0e6 !important;
-  background-color: #fff0e6 !important;
-  background-image: none !important;
-
-  color: #ff6200 !important;
-  -webkit-text-fill-color: #ff6200 !important;
-
-  border: 1px solid #d7dce3 !important;
-  border-radius: 10px !important;
-
-  font: 600 14px/1.25 'Segoe UI', Arial, Helvetica, sans-serif !important;
-  text-align: left !important;
-  text-transform: none !important;
-  letter-spacing: 0 !important;
-  text-indent: 0 !important;
-  white-space: normal !important;
-
-  opacity: 1 !important;
-  visibility: visible !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
-  filter: none !important;
-  cursor: pointer !important;
+div.geo2d-root .geo2d-toolbtn{
+  display:block !important;
+  width:100% !important;
+  min-height:42px !important;
+  padding:10px 12px !important;
+  margin:0 0 8px 0 !important;
+  border:1px solid #d7dce3 !important;
+  border-radius:10px !important;
+  background:#fff0e6 !important;
+  color:#ff6200 !important;
+  font-family:'Segoe UI', Arial, sans-serif !important;
+  font-size:14px !important;
+  font-weight:700 !important;
+  text-align:left !important;
+  cursor:pointer !important;
+  box-shadow:none !important;
+  appearance:none !important;
+  -webkit-appearance:none !important;
 }
 
-div.geo2d-root .geo2d-toolgrid button[data-tool]:hover {
-  background: #ffe0cc !important;
-  background-color: #ffe0cc !important;
-  color: #ff6200 !important;
-  -webkit-text-fill-color: #ff6200 !important;
+div.geo2d-root .geo2d-toolbtn:hover{
+  background:#ffe0cc !important;
+  color:#ff6200 !important;
 }
 
-div.geo2d-root .geo2d-toolgrid button[data-tool].active {
-  background: #ff6200 !important;
-  background-color: #ff6200 !important;
-  background-image: none !important;
-  color: #ffffff !important;
-  -webkit-text-fill-color: #ffffff !important;
-  border-color: #ff6200 !important;
-  box-shadow: 0 2px 6px rgba(255, 98, 0, 0.30) !important;
+div.geo2d-root .geo2d-toolbtn.active{
+  background:#ff6200 !important;
+  color:#fff !important;
+  border-color:#ff6200 !important;
 }
 
 
@@ -1309,93 +1295,100 @@ div.geo2d-root .geo2d-toolgrid button[data-tool].active {
        SUBPARTE 6.1. CONSTRUCCIÓN DEL LAYOUT
        --------------------------------------------------------- */
 
+  
     buildLayout() {
-      this.root = document.createElement('div');
-      this.root.className = 'geo2d-root';
+  this.root = document.createElement('div');
+  this.root.className = 'geo2d-root';
 
-      this.root.innerHTML = `
-        <div class="geo2d-toolbar">
-          <button data-action="new">Nuevo</button>
-          <button data-action="load">Cargar</button>
-          <button data-action="save">Guardar JSON</button>
-          <button data-action="publish">Publicar HTML</button>
-          <button data-action="copyjson">Copiar JSON</button>
-          <span style="flex:1"></span>
-          <input type="text" data-role="title" placeholder="Título de la escena" />
+  this.root.innerHTML = `
+    <div class="geo2d-toolbar">
+      <button data-action="new">Nuevo</button>
+      <button data-action="load">Cargar</button>
+      <button data-action="save">Guardar JSON</button>
+      <button data-action="publish">Publicar HTML</button>
+      <button data-action="copyjson">Copiar JSON</button>
+      <span style="flex:1"></span>
+      <input type="text" data-role="title" placeholder="Título de la escena" />
+    </div>
+
+    <div class="geo2d-body">
+      <aside class="geo2d-side">
+        <h3>Herramientas</h3>
+
+        <div class="geo2d-toolgrid">
+          <button class="geo2d-toolbtn active" data-tool="move" type="button">Mover / Vista</button>
+          <button class="geo2d-toolbtn" data-tool="point" type="button">Punto</button>
+          <button class="geo2d-toolbtn" data-tool="segment" type="button">Segmento</button>
+          <button class="geo2d-toolbtn" data-tool="line" type="button">Recta</button>
+          <button class="geo2d-toolbtn" data-tool="circle" type="button">Circunferencia</button>
+          <button class="geo2d-toolbtn" data-tool="polygon" type="button">Polígono</button>
+          <button class="geo2d-toolbtn" data-tool="midpoint" type="button">Punto medio</button>
+          <button class="geo2d-toolbtn" data-tool="measure-distance" type="button">Medir distancia</button>
+          <button class="geo2d-toolbtn" data-tool="delete" type="button">Borrar</button>
+        </div>
+      </aside>
+
+      <main class="geo2d-main">
+        <div class="geo2d-tabs">
+          <button class="geo2d-tab active" data-tab="visual" type="button">Visual</button>
+          <button class="geo2d-tab" data-tab="json" type="button">JSON</button>
         </div>
 
-        <div class="geo2d-body">
-          <aside class="geo2d-side">
-            <h3>Herramientas</h3>
-            <div class="geo2d-toolgrid">
-              <button data-tool="move">Mover / Vista</button>
-              <button data-tool="point">Punto</button>
-              <button data-tool="segment">Segmento</button>
-              <button data-tool="line">Recta</button>
-              <button data-tool="circle">Circunferencia</button>
-              <button data-tool="polygon">Polígono</button>
-              <button data-tool="midpoint">Punto medio</button>
-              <button data-tool="measure-distance">Medir distancia</button>
-              <button data-tool="delete">Borrar</button>
+        <div class="geo2d-panels">
+          <section class="geo2d-panel active" data-panel="visual">
+            <div class="geo2d-visual-wrap">
+              <div class="geo2d-canvas-wrap">
+                <svg></svg>
+              </div>
+              <div class="geo2d-status" data-role="status">Listo.</div>
             </div>
-          </aside>
+          </section>
 
-          <main class="geo2d-main">
-            <div class="geo2d-tabs">
-              <button class="geo2d-tab active" data-tab="visual">Visual</button>
-              <button class="geo2d-tab" data-tab="json">JSON</button>
+          <section class="geo2d-panel" data-panel="json">
+            <div class="geo2d-json-wrap">
+              <textarea spellcheck="false"></textarea>
+              <div class="geo2d-json-actions">
+                <button data-action="apply-json" type="button">Aplicar cambios</button>
+                <button data-action="format-json" type="button">Formatear JSON</button>
+              </div>
             </div>
-
-            <div class="geo2d-panels">
-              <section class="geo2d-panel active" data-panel="visual">
-                <div class="geo2d-visual-wrap">
-                  <div class="geo2d-canvas-wrap">
-                    <svg></svg>
-                  </div>
-                  <div class="geo2d-status" data-role="status">Listo.</div>
-                </div>
-              </section>
-
-              <section class="geo2d-panel" data-panel="json">
-                <div class="geo2d-json-wrap">
-                  <textarea spellcheck="false"></textarea>
-                  <div class="geo2d-json-actions">
-                    <button data-action="apply-json">Aplicar cambios</button>
-                    <button data-action="format-json">Formatear JSON</button>
-                  </div>
-                </div>
-              </section>
-            </div>
-          </main>
+          </section>
         </div>
+      </main>
+    </div>
 
-        <div class="geo2d-modal-backdrop">
-          <div class="geo2d-modal">
-            <div class="geo2d-modal-head"><strong>Publicar HTML</strong></div>
-            <div class="geo2d-modal-body">
-              <textarea spellcheck="false" readonly></textarea>
-            </div>
-            <div class="geo2d-modal-foot">
-              <button data-action="copy-published">Copiar HTML</button>
-              <button data-action="download-published">Descargar HTML</button>
-              <button data-action="close-modal">Cerrar</button>
-            </div>
-          </div>
+    <div class="geo2d-modal-backdrop">
+      <div class="geo2d-modal">
+        <div class="geo2d-modal-head"><strong>Publicar HTML</strong></div>
+        <div class="geo2d-modal-body">
+          <textarea spellcheck="false" readonly></textarea>
         </div>
-      `;
+        <div class="geo2d-modal-foot">
+          <button data-action="copy-published" type="button">Copiar HTML</button>
+          <button data-action="download-published" type="button">Descargar HTML</button>
+          <button data-action="close-modal" type="button">Cerrar</button>
+        </div>
+      </div>
+    </div>
+  `;
 
-      this.targetEl.innerHTML = '';
-      this.targetEl.appendChild(this.root);
+  this.targetEl.innerHTML = '';
+  this.targetEl.appendChild(this.root);
 
-      this.svg = this.root.querySelector('svg');
-      this.statusEl = this.root.querySelector('[data-role="status"]');
-      this.titleInput = this.root.querySelector('[data-role="title"]');
-      this.jsonArea = this.root.querySelector('.geo2d-json-wrap textarea');
-      this.modalBackdrop = this.root.querySelector('.geo2d-modal-backdrop');
-      this.publishArea = this.root.querySelector('.geo2d-modal textarea');
+  this.svg = this.root.querySelector('svg');
+  this.statusEl = this.root.querySelector('[data-role="status"]');
+  this.titleInput = this.root.querySelector('[data-role="title"]');
+  this.jsonArea = this.root.querySelector('.geo2d-json-wrap textarea');
+  this.modalBackdrop = this.root.querySelector('.geo2d-modal-backdrop');
+  this.publishArea = this.root.querySelector('.geo2d-modal textarea');
 
-      this.titleInput.value = this.scene.meta.title || '';
-    }
+  this.titleInput.value = this.scene.meta.title || '';
+}
+
+
+
+
+
 
     /* ---------------------------------------------------------
        SUBPARTE 6.2. EVENTOS DE INTERFAZ
