@@ -511,7 +511,6 @@
         text-align: center;
         border-radius: clamp(11px, 1.5vw, 14px);
         border: 1px solid rgba(107, 224, 130, 0.14);
-        border-left: 5px solid #58db73;
         background: linear-gradient(180deg, rgba(31, 66, 38, 0.98) 0%, rgba(18, 39, 24, 0.98) 100%);
         box-shadow:
           inset 0 0 0 1px rgba(255,255,255,0.025),
@@ -526,7 +525,6 @@
 
       .juegosprofearauco-torre2-root .juegosprofearauco-torre-barra-tactil-activa {
         border-color: rgba(125, 255, 154, 0.42);
-        border-left-color: #88ff9b;
         background: linear-gradient(180deg, rgba(47, 100, 58, 0.98) 0%, rgba(23, 53, 31, 0.98) 100%);
         box-shadow:
           inset 0 0 0 1px rgba(255,255,255,0.03),
@@ -1181,7 +1179,6 @@
         min-height: 34px;
         padding: 0.38rem 0.44rem;
         gap: 0.24rem;
-        border-left-width: 4px;
       }
 
 
