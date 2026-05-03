@@ -503,10 +503,12 @@
           0 8px 16px rgba(0, 0, 0, 0.24);
       }
 
-      .juegosprofearauco-torre2-root .juegosprofearauco-torre-barra {
+     .juegosprofearauco-torre2-root .juegosprofearauco-torre-barra {
         min-height: clamp(42px, 5.6vw, 58px);
-        padding: clamp(0.5rem, 0.85vw, 0.75rem) clamp(0.56rem, 0.95vw, 0.85rem);
-        gap: clamp(0.4rem, 0.75vw, 0.7rem);
+        padding: clamp(0.5rem, 0.85vw, 0.75rem) clamp(0.7rem, 1.1vw, 1rem);
+        gap: 0;
+        justify-content: center;
+        text-align: center;
         border-radius: clamp(11px, 1.5vw, 14px);
         border: 1px solid rgba(107, 224, 130, 0.14);
         border-left: 5px solid #58db73;
@@ -547,9 +549,7 @@
           0 0 0 1px rgba(255, 98, 0, 0.28);
       }
 
-      .juegosprofearauco-torre2-root .juegosprofearauco-torre-barra-handle {
-        font-size: clamp(0.78rem, 1.15vw, 0.95rem);
-      }
+
 
       .juegosprofearauco-torre2-root .juegosprofearauco-torre-barra-texto {
         font-size: clamp(0.78rem, 1.3vw, 0.98rem);
@@ -1184,10 +1184,7 @@
         border-left-width: 4px;
       }
 
-      .juegosprofearauco-torre2-root .juegosprofearauco-panel.is-fullscreen.is-mobile-landscape .juegosprofearauco-torre-barra-handle,
-      .juegosprofearauco-torre2-root .juegosprofearauco-panel.is-fullscreen.is-mobile-portrait .juegosprofearauco-torre-barra-handle {
-        font-size: 0.66rem;
-      }
+
 
       .juegosprofearauco-torre2-root .juegosprofearauco-panel.is-fullscreen.is-mobile-landscape .juegosprofearauco-torre-barra-linea span,
       .juegosprofearauco-torre2-root .juegosprofearauco-panel.is-fullscreen.is-mobile-landscape .juegosprofearauco-torre-barra-linea strong,
@@ -2630,7 +2627,6 @@
 
         return `
           <div class="${clasesBarra.join(" ")}" data-tp-barra-index="${indice}">
-            <span class="${claseUI("torre-barra-handle")}">::</span>
             <div class="${claseUI("torre-barra-texto")}">${barra.textoHTML}</div>
           </div>
         `;
