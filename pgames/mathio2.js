@@ -9,6 +9,11 @@ const MATHIO_CSS = `
         .mathio-juego:-webkit-full-screen { height: 100vh !important; width: 100vw !important; max-width: none !important; max-height: none !important; border-radius: 0 !important; margin: 0 !important; }
         .mathio-juego canvas { display: block; width: 100%; height: 100%; cursor: grab; }
         .mathio-juego canvas:active { cursor: grabbing; }
+        .mathio-juego .mathio-label-layer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 4; }
+        .mathio-juego .mathio-dom-label { position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); display: block; text-align: center; color: #fff; font-weight: 700; line-height: 1.1; white-space: nowrap; text-shadow: 0 1px 2px rgba(0,0,0,0.5); will-change: transform, font-size, max-width; }
+        .mathio-juego .mathio-dom-label .katex { font-size: 1em; }
+        .mathio-juego .mathio-dom-label .mathio-label-fragment { display: inline-block; vertical-align: middle; }
+        .mathio-juego .mathio-dom-label.is-active { text-shadow: 0 0 12px currentColor, 0 1px 2px rgba(0,0,0,0.55); }
         .mathio-juego .mathio-ui-container { position: absolute; top: 12px; left: 50%; transform: translateX(-50%); width: min(78%, 520px); text-align: center; pointer-events: none; z-index: 10; display: flex; flex-direction: column; align-items: center; gap: 6px; }
         .mathio-juego .mathio-score-display { position: relative; width: min(260px, 76vw); height: 12px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.18); box-shadow: 0 2px 8px rgba(0,0,0,0.35); font-size: 9px; line-height: 12px; font-weight: 800; color: rgba(255,255,255,0.88); text-shadow: 0 1px 2px rgba(0,0,0,0.85); }
         .mathio-juego .mathio-score-display::before { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--mathio-preview, 0%); background: rgba(76,201,240,0.46); border-radius: inherit; transition: width 0.16s ease; }
@@ -344,6 +349,11 @@ const canvas = root.querySelector('[data-mathio-canvas]'); const ctx = canvas.ge
 const targetExpression = root.querySelector('[data-mathio-target]'); const scoreDisplay = root.querySelector('[data-mathio-score]');
 const flashScreen = root.querySelector('[data-mathio-flash]');
 const instructionDisplay = root.querySelector('[data-mathio-instructions]');
+const labelLayer = document.createElement('div');
+labelLayer.className = 'mathio-label-layer';
+labelLayer.setAttribute('aria-hidden', 'true');
+root.appendChild(labelLayer);
+cleanupTasks.push(() => labelLayer.remove());
 
 const fsBtn = document.createElement('button'); fsBtn.className = 'mathio-fullscreen-btn'; fsBtn.innerHTML = '⛶'; fsBtn.title = 'Pantalla completa'; root.appendChild(fsBtn);
 cleanupTasks.push(() => fsBtn.remove());
@@ -945,6 +955,72 @@ function drawMembrane(x, y, r, wX, wY, angle, fillStyle, strokeStyle, lineDash) 
     ctx.save(); ctx.translate(x, y); ctx.rotate(angle); ctx.scale(wX, wY); ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2);
     ctx.fillStyle = fillStyle; ctx.fill(); ctx.strokeStyle = strokeStyle; ctx.lineWidth = 3; if (lineDash) ctx.setLineDash(lineDash); ctx.stroke(); ctx.restore();
 }
+
+const etiquetasDOM = new Map();
+let etiquetasUsadas = new Set();
+
+function prepararEtiquetasDOM() {
+    etiquetasUsadas = new Set();
+}
+
+function limpiarEtiquetasDOMNoUsadas() {
+    etiquetasDOM.forEach((el, key) => {
+        if (etiquetasUsadas.has(key)) return;
+        el.remove();
+        etiquetasDOM.delete(key);
+    });
+}
+
+function escalaCanvasDOM() {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: rect.width / Math.max(1, canvas.width),
+        y: rect.height / Math.max(1, canvas.height)
+    };
+}
+
+function htmlEtiquetaDOM(fragmentos) {
+    return fragmentos.map(f => {
+        const color = escaparAtributo(f.color || 'white');
+        const contenido = f.math ? renderMathHTML(f.latex, false) : escaparHTML(f.text);
+        return `<span class="mathio-label-fragment" style="color:${color}">${contenido}</span>`;
+    }).join('');
+}
+
+function dibujarEtiquetaDOM(clave, x, y, fragmentos, radio) {
+    if (gameState !== 'PLAYING' && gameState !== 'TRANSITION') return false;
+    if (!window.katex || typeof window.katex.renderToString !== 'function') return false;
+    fragmentos = fragmentos.filter(f => f && f.text !== undefined && f.text !== null && String(f.text).length > 0);
+    if (!fragmentos.some(f => f.math)) return false;
+
+    let textoPlano = fragmentos.map(f => f.text).join("");
+    let fontSize = 22; if (textoPlano.length > 18) fontSize = 18; if (textoPlano.length > 30) fontSize = 14;
+    const escala = escalaCanvasDOM();
+    const escalaTexto = Math.min(escala.x, escala.y);
+    const maxWidth = Math.max(40, radio * 1.8) * escala.x;
+    let el = etiquetasDOM.get(clave);
+
+    if (!el) {
+        el = document.createElement('div');
+        el.className = 'mathio-dom-label';
+        labelLayer.appendChild(el);
+        etiquetasDOM.set(clave, el);
+    }
+
+    const html = htmlEtiquetaDOM(fragmentos);
+    if (el.dataset.html !== html) {
+        el.innerHTML = html;
+        el.dataset.html = html;
+    }
+
+    el.style.transform = `translate(${x * escala.x}px, ${y * escala.y}px) translate(-50%, -50%)`;
+    el.style.fontSize = `${fontSize * escalaTexto}px`;
+    el.style.maxWidth = `${maxWidth}px`;
+    el.classList.toggle('is-active', fragmentos.some(f => identidadEstaActiva(f.id)));
+    etiquetasUsadas.add(clave);
+    return true;
+}
+
 function drawText(x, y, text, color = "white", id = undefined, radio = RADIO_PIEZA_BASE) { dibujarFragmentosCentrados(x, y, fragmentosDesdeMarcadores(text, color, id), radio); }
 
 function fragmentosPieza(pieza) {
@@ -1007,7 +1083,9 @@ function drawObj(obj) {
     const escalaLectura = 1 + (obj.readBoost || 0);
     const radioVisual = obj.r * escalaLectura;
     dibujarHaloIdentidad(obj, [obj.id]); drawMembrane(obj.x, obj.y, radioVisual, obj.wX, obj.wY, obj.angle, obj.color || "#444", "white", null);
-    if (identidadEstaActiva(obj.id)) { ctx.save(); const pulso = 0.55 + 0.45 * Math.sin(performance.now() / 140); ctx.shadowColor = obj.color || "white"; ctx.shadowBlur = 12 + 12 * pulso; drawText(obj.x, obj.y, obj.text, "white", obj.id, radioVisual); ctx.restore(); } else { drawText(obj.x, obj.y, obj.text, "white", obj.id, radioVisual); }
+    const fragmentos = fragmentosDesdeMarcadores(obj.text, "white", obj.id);
+    if (dibujarEtiquetaDOM(`obj_${obj.uid}`, obj.x, obj.y, fragmentos, radioVisual)) return;
+    if (identidadEstaActiva(obj.id)) { ctx.save(); const pulso = 0.55 + 0.45 * Math.sin(performance.now() / 140); ctx.shadowColor = obj.color || "white"; ctx.shadowBlur = 12 + 12 * pulso; dibujarFragmentosCentrados(obj.x, obj.y, fragmentos, radioVisual); ctx.restore(); } else { dibujarFragmentosCentrados(obj.x, obj.y, fragmentos, radioVisual); }
 }
 
 function drawBubble(pb, isDispenser = false) {
@@ -1027,7 +1105,9 @@ function drawBubble(pb, isDispenser = false) {
             }
         }
         let fragmentos = fragmentosVisualesBurbuja(pb);
-        if (fragmentos.length > 0) dibujarFragmentosCentrados(pb.x, pb.y, fragmentos, radioVisual); else { ctx.fillStyle = "white"; ctx.font = "bold 22px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(texto, pb.x, pb.y); }
+        if (fragmentos.length > 0) {
+            if (!dibujarEtiquetaDOM(`bubble_${pb.uid}`, pb.x, pb.y, fragmentos, radioVisual)) dibujarFragmentosCentrados(pb.x, pb.y, fragmentos, radioVisual);
+        } else { ctx.fillStyle = "white"; ctx.font = "bold 22px Arial"; ctx.textAlign = "center"; ctx.textBaseline = "middle"; ctx.fillText(texto, pb.x, pb.y); }
     }
 }
 
@@ -1040,6 +1120,7 @@ function drawHUD() {
 
 function draw() {
     actualizarScoreDisplay();
+    prepararEtiquetasDOM();
     ctx.clearRect(0, 0, canvas.width, canvas.height); ctx.save();
     if (shakeTime > 0) { ctx.translate((Math.random()-0.5)*15, (Math.random()-0.5)*15); shakeTime--; }
 
@@ -1058,6 +1139,7 @@ function draw() {
         ctx.lineWidth = 3; ctx.strokeStyle = "black"; ctx.strokeText(ft.text, ft.x, ft.y); ctx.fillText(ft.text, ft.x, ft.y);
     });
     ctx.globalAlpha = 1; ctx.restore();
+    limpiarEtiquetasDOMNoUsadas();
 
     if (gameState === 'GAMEOVER') {
         ctx.fillStyle = "rgba(0, 0, 0, 0.8)"; ctx.fillRect(0, 0, canvas.width, canvas.height);
