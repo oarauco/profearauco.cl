@@ -1,7 +1,7 @@
 (function (window, document) {
   "use strict";
 
-  const MENSAJE_MOTOR_FALTANTE =
+  const MENSAJE_MOTOR_FALTANTE = 
     "grafiestadistik-auto.js: no se encontró window.GrafiEstadistik. Asegúrate de cargar antes grafiestadistik-motor.js";
 
   function obtenerAPI() {
