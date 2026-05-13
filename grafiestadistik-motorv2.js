@@ -645,11 +645,25 @@
 
     etiquetas = etiquetas && typeof etiquetas === "object" ? etiquetas : {};
 
-    const margen = { top: 20, right: 20, bottom: 50, left: 60 };
-    const anchoSVG = 400;
-    const altoSVG = 300;
-    const ancho = anchoSVG - margen.left - margen.right;
-    const alto = altoSVG - margen.top - margen.bottom;
+
+const margen = { top: 20, right: 20, bottom: 55, left: 70 };
+
+const anchoSVG =
+  Number.isFinite(etiquetas.anchoSVG) && etiquetas.anchoSVG > 0
+    ? Number(etiquetas.anchoSVG)
+    : 640;
+
+const altoSVG =
+  Number.isFinite(etiquetas.altoSVG) && etiquetas.altoSVG > 0
+    ? Number(etiquetas.altoSVG)
+    : 420;
+
+const ancho = anchoSVG - margen.left - margen.right;
+const alto = altoSVG - margen.top - margen.bottom;
+
+
+
+    
 
     const ejeX = etiquetas.x || "X";
     const ejeY = etiquetas.y || "Y";
@@ -750,7 +764,13 @@
     svg += `<text transform="rotate(-90)" x="${-(margen.top + alto / 2)}" y="${margen.left - 40}" font-size="12" text-anchor="middle">${ejeY}</text>`;
 
     datosValidos.forEach((d) => {
-      svg += `<circle cx="${escalaX(d.x)}" cy="${escalaY(d.y)}" r="4" fill="${colorPuntos}" opacity="0.75" />`;
+const radioPunto =
+  Number.isFinite(etiquetas.radioPunto) && etiquetas.radioPunto > 0
+    ? Number(etiquetas.radioPunto)
+    : 4.5;
+
+svg += `<circle cx="${escalaX(d.x)}" cy="${escalaY(d.y)}" r="${radioPunto}" fill="${colorPuntos}" opacity="0.8" />`;
+      
     });
 
     svg += `</svg>`;
