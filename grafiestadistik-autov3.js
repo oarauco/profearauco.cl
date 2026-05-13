@@ -253,17 +253,17 @@ function inicializarGraficosDispersion(root, api) {
     const stepX = parsearNumeroAttr(div, "stepX", null);
     const stepY = parsearNumeroAttr(div, "stepY", null);
 
-    if (Number.isFinite(stepX) && stepX > 0 && rangoX) {
-      etiquetas.ticksX = Math.max(1, Math.round((rangoX.max - rangoX.min) / stepX));
-    } else {
-      etiquetas.ticksX = parsearEnteroAttr(div, "ticksX", etiquetas.ticksX || null);
-    }
+if (Number.isFinite(stepX) && stepX > 0) {
+  etiquetas.stepX = stepX;
+} else {
+  etiquetas.ticksX = parsearEnteroAttr(div, "ticksX", etiquetas.ticksX || null);
+}
 
-    if (Number.isFinite(stepY) && stepY > 0 && rangoY) {
-      etiquetas.ticksY = Math.max(1, Math.round((rangoY.max - rangoY.min) / stepY));
-    } else {
-      etiquetas.ticksY = parsearEnteroAttr(div, "ticksY", etiquetas.ticksY || null);
-    }
+if (Number.isFinite(stepY) && stepY > 0) {
+  etiquetas.stepY = stepY;
+} else {
+  etiquetas.ticksY = parsearEnteroAttr(div, "ticksY", etiquetas.ticksY || null);
+}
 
     etiquetas.anchoSVG = parsearNumeroAttr(div, "width", null);
     etiquetas.altoSVG = parsearNumeroAttr(div, "height", null);
