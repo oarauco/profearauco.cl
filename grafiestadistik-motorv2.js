@@ -719,20 +719,33 @@ const alto = altoSVG - margen.top - margen.bottom;
       maxY = aux;
     }
 
-    const ticksX =
-      Number.isInteger(etiquetas.ticksX) && etiquetas.ticksX > 0
-        ? etiquetas.ticksX
-        : 5;
 
-    const ticksY =
-      Number.isInteger(etiquetas.ticksY) && etiquetas.ticksY > 0
-        ? etiquetas.ticksY
-        : 5;
 
-    const rangoX = (maxX - minX) || 1;
-    const rangoY = (maxY - minY) || 1;
-    const pasoX = rangoX / ticksX;
-    const pasoY = rangoY / ticksY;
+const rangoX = (maxX - minX) || 1;
+const rangoY = (maxY - minY) || 1;
+
+const pasoX =
+  Number.isFinite(etiquetas.stepX) && etiquetas.stepX > 0
+    ? Number(etiquetas.stepX)
+    : rangoX / (
+        Number.isInteger(etiquetas.ticksX) && etiquetas.ticksX > 0
+          ? etiquetas.ticksX
+          : 5
+      );
+
+const pasoY =
+  Number.isFinite(etiquetas.stepY) && etiquetas.stepY > 0
+    ? Number(etiquetas.stepY)
+    : rangoY / (
+        Number.isInteger(etiquetas.ticksY) && etiquetas.ticksY > 0
+          ? etiquetas.ticksY
+          : 5
+      );
+
+
+
+
+    
 
     const escalaX = (val) => margen.left + ((val - minX) / rangoX) * ancho;
     const escalaY = (val) => margen.top + alto - ((val - minY) / rangoY) * alto;
@@ -741,21 +754,23 @@ const alto = altoSVG - margen.top - margen.bottom;
 
     let svg = crearSVGBase(anchoSVG, altoSVG);
 
-    for (let i = 0; i <= ticksX; i++) {
-      const valX = minX + i * pasoX;
-      const x = escalaX(valX);
-      svg += `<line x1="${x}" y1="${margen.top}" x2="${x}" y2="${margen.top + alto}" stroke="#e0e0e0" />`;
-      svg += `<line x1="${x}" y1="${margen.top + alto}" x2="${x}" y2="${margen.top + alto + 5}" stroke="black" />`;
-      svg += `<text x="${x}" y="${margen.top + alto + 18}" font-size="10" text-anchor="middle">${formatearNumero(valX)}</text>`;
-    }
 
-    for (let i = 0; i <= ticksY; i++) {
-      const valY = minY + i * pasoY;
-      const y = escalaY(valY);
-      svg += `<line x1="${margen.left}" y1="${y}" x2="${margen.left + ancho}" y2="${y}" stroke="#e0e0e0" />`;
-      svg += `<line x1="${margen.left - 5}" y1="${y}" x2="${margen.left}" y2="${y}" stroke="black" />`;
-      svg += `<text x="${margen.left - 10}" y="${y}" font-size="10" text-anchor="end" dominant-baseline="middle">${formatearNumero(valY)}</text>`;
-    }
+for (let valX = minX; valX <= maxX + 1e-9; valX += pasoX) {
+  const x = escalaX(valX);
+  svg += `<line x1="${x}" y1="${margen.top}" x2="${x}" y2="${margen.top + alto}" stroke="#e0e0e0" />`;
+  svg += `<line x1="${x}" y1="${margen.top + alto}" x2="${x}" y2="${margen.top + alto + 5}" stroke="black" />`;
+  svg += `<text x="${x}" y="${margen.top + alto + 18}" font-size="10" text-anchor="middle">${formatearNumero(valX)}</text>`;
+}
+
+
+for (let valY = minY; valY <= maxY + 1e-9; valY += pasoY) {
+  const y = escalaY(valY);
+  svg += `<line x1="${margen.left}" y1="${y}" x2="${margen.left + ancho}" y2="${y}" stroke="#e0e0e0" />`;
+  svg += `<line x1="${margen.left - 5}" y1="${y}" x2="${margen.left}" y2="${y}" stroke="black" />`;
+  svg += `<text x="${margen.left - 10}" y="${y}" font-size="10" text-anchor="end" dominant-baseline="middle">${formatearNumero(valY)}</text>`;
+}
+
+    
 
     svg += `<line x1="${margen.left}" y1="${margen.top}" x2="${margen.left}" y2="${margen.top + alto}" stroke="black" />`;
     svg += `<line x1="${margen.left}" y1="${margen.top + alto}" x2="${margen.left + ancho}" y2="${margen.top + alto}" stroke="black" />`;
