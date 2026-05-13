@@ -59,6 +59,25 @@
     return Number.isInteger(valor) ? valor : fallback;
   }
 
+
+function parsearRangoAttr(el, nombre, fallback = null) {
+  const raw = el.dataset[nombre];
+  if (raw === undefined || raw === null || raw === "") return fallback;
+
+  const partes = String(raw).split(",").map((v) => parseFloat(v.trim()));
+  if (partes.length !== 2) return fallback;
+  if (!Number.isFinite(partes[0]) || !Number.isFinite(partes[1])) return fallback;
+
+  return {
+    min: partes[0],
+    max: partes[1]
+  };
+}
+
+
+
+  
+
   function procesarColeccion(root, selector, etiquetaError, callback) {
     seleccionarTodos(root, selector).forEach(function (el) {
       try {
@@ -204,18 +223,63 @@
     });
   }
 
-  function inicializarGraficosDispersion(root, api) {
-    procesarColeccion(root, ".grafico-dispersion-auto", "Error en gráfico de dispersión", function (div) {
-      const id = div.id;
-      const puntos = parsearJSONAttr(div, "puntos", []);
-      const etiquetas = parsearJSONAttr(div, "etiquetas", {});
-      const color = div.dataset.color || "steelblue";
+function inicializarGraficosDispersion(root, api) {
+  procesarColeccion(root, ".grafico-dispersion-auto", "Error en gráfico de dispersión", function (div) {
+    const id = div.id;
+    const puntos = parsearJSONAttr(div, "puntos", []);
 
-      if (id && Array.isArray(puntos) && puntos.length > 0) {
-        api.dibujarGraficoDispersion(id, puntos, etiquetas, color);
-      }
-    });
-  }
+    let etiquetas = parsearJSONAttr(div, "etiquetas", {});
+    const etiquetasEjes = parsearJSONAttr(div, "etiquetasEjes", {});
+
+    etiquetas = {
+      ...etiquetas,
+      x: etiquetas.x || etiquetasEjes.x || div.dataset.etiquetaX || "X",
+      y: etiquetas.y || etiquetasEjes.y || div.dataset.etiquetaY || "Y"
+    };
+
+    const rangoX = parsearRangoAttr(div, "rangeX", null);
+    const rangoY = parsearRangoAttr(div, "rangeY", null);
+
+    if (rangoX) {
+      etiquetas.minX = rangoX.min;
+      etiquetas.maxX = rangoX.max;
+    }
+
+    if (rangoY) {
+      etiquetas.minY = rangoY.min;
+      etiquetas.maxY = rangoY.max;
+    }
+
+    const stepX = parsearNumeroAttr(div, "stepX", null);
+    const stepY = parsearNumeroAttr(div, "stepY", null);
+
+    if (Number.isFinite(stepX) && stepX > 0 && rangoX) {
+      etiquetas.ticksX = Math.max(1, Math.round((rangoX.max - rangoX.min) / stepX));
+    } else {
+      etiquetas.ticksX = parsearEnteroAttr(div, "ticksX", etiquetas.ticksX || null);
+    }
+
+    if (Number.isFinite(stepY) && stepY > 0 && rangoY) {
+      etiquetas.ticksY = Math.max(1, Math.round((rangoY.max - rangoY.min) / stepY));
+    } else {
+      etiquetas.ticksY = parsearEnteroAttr(div, "ticksY", etiquetas.ticksY || null);
+    }
+
+    etiquetas.anchoSVG = parsearNumeroAttr(div, "width", null);
+    etiquetas.altoSVG = parsearNumeroAttr(div, "height", null);
+
+    const radioPunto = parsearNumeroAttr(div, "radioPunto", null);
+    if (Number.isFinite(radioPunto) && radioPunto > 0) {
+      etiquetas.radioPunto = radioPunto;
+    }
+
+    const color = div.dataset.color || "steelblue";
+
+    if (id && Array.isArray(puntos) && puntos.length > 0) {
+      api.dibujarGraficoDispersion(id, puntos, etiquetas, color);
+    }
+  });
+}
 
   function inicializarGraficosLineas(root, api) {
     procesarColeccion(root, ".grafico-lineas-auto", "Error en gráfico de líneas", function (div) {
