@@ -10431,7 +10431,7 @@
       this.options = options;
       this.mode = options.mode || 'editor';
       this.viewerMode = this.mode === 'viewer'
-        ? normalizeViewerMode(options.viewerMode || this.targetEl.getAttribute?.('data-viewer-mode') || this.targetEl.getAttribute?.('data-mode'))
+        ? normalizeViewerMode(options.viewerMode || this.targetEl.getAttribute?.('data-viewer-mode') || this.targetEl.getAttribute?.('data-geo2d-mode') || this.targetEl.getAttribute?.('data-mode'))
         : 'editor';
       this.model = new SceneModel(loadSceneFromOptions(options));
       this.hitTester = new Geo2DHitTester(this);
@@ -14635,7 +14635,7 @@
       try {
         window.Geo2D.mountEditor(el, null, {
           target: el,
-          sceneSource: (el.getAttribute('data-scene') || el.getAttribute('data-geo2d-scene')) ? el : undefined
+          sceneSource: SceneParser.readEmbeddedSceneText(el) ? el : undefined
         });
         el.__geo2dMounted = true;
       } catch (err) {
@@ -14649,7 +14649,8 @@
       try {
         window.Geo2D.mountViewer(el, null, {
           target: el,
-          sceneSource: (el.getAttribute('data-scene') || el.getAttribute('data-geo2d-scene')) ? el : undefined
+          viewerMode: normalizeViewerMode(el.getAttribute('data-viewer-mode') || el.getAttribute('data-geo2d-mode') || el.getAttribute('data-mode')),
+          sceneSource: SceneParser.readEmbeddedSceneText(el) ? el : undefined
         });
         el.__geo2dMounted = true;
       } catch (err) {
