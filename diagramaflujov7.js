@@ -10,26 +10,27 @@
   "use strict";
 
   const COLORES_NODO = {
-    inicio: { fill: "#e6f4ea", stroke: "#2e7d32", text: "#1b1b1b" },
-    fin: { fill: "#e6f4ea", stroke: "#2e7d32", text: "#1b1b1b" },
-    proceso: { fill: "#e8f1ff", stroke: "#1565c0", text: "#1b1b1b" },
-    decision: { fill: "#ffe8cc", stroke: "#ef6c00", text: "#1b1b1b" },
-    resultado: { fill: "#f3e8ff", stroke: "#7b1fa2", text: "#1b1b1b" },
-    referencia: { fill: "#fff8cc", stroke: "#f9a825", text: "#1b1b1b" },
-    nota: { fill: "#f1f3f5", stroke: "#6c757d", text: "#1b1b1b" },
-    error: { fill: "#fde7e9", stroke: "#c62828", text: "#1b1b1b" }
+    inicio: { fill: "#10281f", fill2: "#163b2d", stroke: "#27f3a2", text: "#eafff7", accent: "#50ffb8" },
+    fin: { fill: "#10281f", fill2: "#163b2d", stroke: "#27f3a2", text: "#eafff7", accent: "#50ffb8" },
+    proceso: { fill: "#101b35", fill2: "#162b55", stroke: "#54a8ff", text: "#eef7ff", accent: "#60d6ff" },
+    decision: { fill: "#2a1d10", fill2: "#44270f", stroke: "#ff9f1c", text: "#fff4df", accent: "#ffd166" },
+    resultado: { fill: "#22113d", fill2: "#32165f", stroke: "#a56cff", text: "#f5edff", accent: "#c084fc" },
+    referencia: { fill: "#2b260d", fill2: "#403714", stroke: "#ffe45e", text: "#fffad7", accent: "#facc15" },
+    nota: { fill: "#111827", fill2: "#1f2937", stroke: "#94a3b8", text: "#eff6ff", accent: "#cbd5e1" },
+    error: { fill: "#35111d", fill2: "#571728", stroke: "#ff4d7d", text: "#fff0f4", accent: "#ff7aa2" }
   };
 
   const COLORES_CONEXION = {
-    flujo: "#666",
-    decision: "#ef6c00",
-    caso: "#7b1fa2",
-    anotacion: "#888",
-    retorno: "#c62828",
-    referencia: "#f9a825"
+    flujo: "#8fa3bd",
+    decision: "#ff9f1c",
+    caso: "#a56cff",
+    anotacion: "#7dd3fc",
+    retorno: "#ff4d7d",
+    referencia: "#ffe45e"
   };
 
   const SVG_NS = "http://www.w3.org/2000/svg";
+  let instanciaRender = 0;
 
   const CONFIG_DEFAULT = {
     anchoNodo: 210,
@@ -40,13 +41,13 @@
     altoNota: 60,
     separacionVertical: 120,
     separacionHorizontal: 90,
-    margenX: 40,
-    margenY: 40,
-    fontFamily: "Arial, Helvetica, sans-serif",
+    margenX: 56,
+    margenY: 56,
+    fontFamily: "Inter, Segoe UI, Roboto, Arial, Helvetica, sans-serif",
     fontSize: 15,
-    strokeWidth: 2,
-    radio: 16,
-    radioNodo: 8,
+    strokeWidth: 2.25,
+    radio: 22,
+    radioNodo: 14,
     lateralCodo: 28,
     lateralGap: 42,
     lateralSeparacionVertical: 14,
@@ -75,7 +76,47 @@
     etiquetaOffsetY: 8,
     etiquetaFontDelta: 2,
     etiquetaTextBaselineAdjust: 4,
-    etiquetaOpacity: 0.92,
+    etiquetaOpacity: 0.96,
+    fondoDiagrama: "#1A202C",
+    fondoDiagrama2: "#f7fdff",
+    fondoPatron: "#38bdf8",
+    fondoPatronSecundario: "#7c3aed",
+    fondoPatronOpacity: 0.22,
+    sombraNodos: true,
+    sombraColor: "#22d3ee",
+    sombraOpacity: 0.28,
+    gradienteNodos: true,
+    bordeSuaveNodos: true,
+    bordeSuaveColor: "#bffcff",
+    bordeSuaveOpacity: 0.32,
+    mostrarAcentoNodos: true,
+    anchoAcentoNodo: 5,
+    conexionWidth: 3.2,
+    conexionOpacity: 0.62,
+    brilloConexiones: true,
+    conexionHoverWidthExtra: 2.2,
+    conexionHoverOpacity: 1,
+    arrastreRutasLigeras: true,
+    interactivoMover: true,
+    cursorMover: "grab",
+    cursorMoviendo: "grabbing",
+    viewportAncho: 800,
+    viewportAlto: 800,
+    viewportPadding: 42,
+    zoomMin: 0.35,
+    zoomMax: 3,
+    zoomPaso: 1.18,
+    controlesZoom: true,
+    tituloColor: "#eaf7ff",
+    tituloSubrayado: "#38bdf8",
+    etiquetaFill: "#0d1728",
+    etiquetaStroke: "#6ee7ff",
+    etiquetaShadow: true,
+    controlFill: "rgba(8, 17, 31, 0.86)",
+    controlStroke: "#38bdf8",
+    controlText: "#eaf7ff",
+    marcoStroke: "#8bdcf5",
+    marcoShadow: "0 18px 48px rgba(14, 116, 144, 0.18), 0 0 30px rgba(56, 189, 248, 0.20)",
     markerRefX: 9,
     markerRefY: 5,
     markerWidth: 7,
@@ -1305,11 +1346,118 @@ class FlujoLayout {
   }
 }
 
+  function idSVG(cfg, base) {
+    return "flujomate-" + cfg._uid + "-" + base;
+  }
+
   function definirMarcadores(svg, cfg) {
     const defs = crearSVG("defs");
+
+    const bgGrad = crearSVG("linearGradient", {
+      id: idSVG(cfg, "arena-bg"),
+      x1: "0%",
+      y1: "0%",
+      x2: "100%",
+      y2: "100%"
+    });
+    bgGrad.appendChild(crearSVG("stop", { offset: "0%", "stop-color": cfg.fondoDiagrama2 || cfg.fondoDiagrama }));
+    bgGrad.appendChild(crearSVG("stop", { offset: "52%", "stop-color": cfg.fondoDiagrama }));
+    bgGrad.appendChild(crearSVG("stop", { offset: "100%", "stop-color": "#c7f0ff" }));
+    defs.appendChild(bgGrad);
+
+    defs.appendChild(crearSVG("filter", {
+      id: idSVG(cfg, "shadow"),
+      x: "-18%",
+      y: "-22%",
+      width: "136%",
+      height: "150%"
+    }));
+    const shadow = defs.lastChild;
+    shadow.appendChild(crearSVG("feDropShadow", {
+      dx: "0",
+      dy: "8",
+      stdDeviation: "8",
+      "flood-color": cfg.sombraColor,
+      "flood-opacity": String(cfg.sombraOpacity)
+    }));
+
+
+
+
+const connectionGlow = crearSVG("filter", {
+  id: idSVG(cfg, "connection-glow"),
+  filterUnits: "userSpaceOnUse",
+  x: "-50000",
+  y: "-50000",
+  width: "100000",
+  height: "100000"
+});
+
+
+
+
+
+
+
+
+
+
+
+    connectionGlow.appendChild(crearSVG("feDropShadow", {
+      dx: "0",
+      dy: "0",
+      stdDeviation: "3",
+      "flood-color": "#7dd3fc",
+      "flood-opacity": "0.55"
+    }));
+    defs.appendChild(connectionGlow);
+
+    const pattern = crearSVG("pattern", {
+      id: idSVG(cfg, "grid"),
+      width: "32",
+      height: "32",
+      patternUnits: "userSpaceOnUse"
+    });
+    pattern.appendChild(crearSVG("path", {
+      d: "M 32 0 L 0 0 0 32",
+      fill: "none",
+      stroke: cfg.fondoPatron,
+      "stroke-width": "1",
+      opacity: String(cfg.fondoPatronOpacity)
+    }));
+    pattern.appendChild(crearSVG("path", {
+      d: "M 16 0 L 16 32 M 0 16 L 32 16",
+      fill: "none",
+      stroke: cfg.fondoPatronSecundario,
+      "stroke-width": "0.5",
+      opacity: String(Math.max(0, cfg.fondoPatronOpacity - 0.08))
+    }));
+    defs.appendChild(pattern);
+
+    const style = crearSVG("style");
+    style.textContent =
+      ".flujomate-conexion{transition:opacity .18s ease,stroke-width .18s ease;}" +
+      ".flujomate-conexion-activa{opacity:1;stroke-dasharray:10 8;animation:flujomateCargaRuta .9s linear infinite;}" +
+      ".flujomate-conexion-atenuada{opacity:.18;}" +
+      "@keyframes flujomateCargaRuta{to{stroke-dashoffset:-36;}}";
+    defs.appendChild(style);
+
+    Object.entries(COLORES_NODO).forEach(([tipo, estilo]) => {
+      const grad = crearSVG("linearGradient", {
+        id: idSVG(cfg, "node-" + tipo),
+        x1: "0%",
+        y1: "0%",
+        x2: "100%",
+        y2: "100%"
+      });
+      grad.appendChild(crearSVG("stop", { offset: "0%", "stop-color": estilo.fill2 || estilo.fill }));
+      grad.appendChild(crearSVG("stop", { offset: "100%", "stop-color": estilo.fill }));
+      defs.appendChild(grad);
+    });
+
     Object.entries(COLORES_CONEXION).forEach(([semantica, color]) => {
       const marker = crearSVG("marker", {
-        id: "flujomate-arrow-" + semantica,
+        id: idSVG(cfg, "arrow-" + semantica),
         viewBox: "0 0 10 10",
         refX: String(cfg.markerRefX),
         refY: String(cfg.markerRefY),
@@ -1323,10 +1471,33 @@ class FlujoLayout {
     svg.appendChild(defs);
   }
 
-  function markerPorColor(color) {
+  function markerPorColor(color, cfg) {
     const entrada = Object.entries(COLORES_CONEXION).find(([, value]) => value === color);
     const semantica = entrada ? entrada[0] : "flujo";
-    return "url(#flujomate-arrow-" + semantica + ")";
+    return "url(#" + idSVG(cfg, "arrow-" + semantica) + ")";
+  }
+
+  function fillNodo(tipo, estilo, cfg) {
+    if (!cfg.gradienteNodos) return estilo.fill;
+    return "url(#" + idSVG(cfg, "node-" + tipo) + ")";
+  }
+
+  function dibujarFondoSVG(svg, width, height, cfg) {
+    const fondo = crearSVG("rect", {
+      x: -50000,
+      y: -50000,
+      width: 100000,
+      height: 100000,
+      fill: "url(#" + idSVG(cfg, "arena-bg") + ")"
+    });
+    svg.appendChild(fondo);
+    svg.appendChild(crearSVG("rect", {
+      x: -50000,
+      y: -50000,
+      width: 100000,
+      height: 100000,
+      fill: "url(#" + idSVG(cfg, "grid") + ")"
+    }));
   }
 
   function puntoBordeRombo(pos, haciaX, haciaY) {
@@ -1518,6 +1689,11 @@ class FlujoLayout {
       "text-anchor": "middle",
       "font-family": cfg.fontFamily,
       "font-size": cfg.fontSize,
+      "font-weight": "750",
+      "letter-spacing": "0",
+      "paint-order": "stroke",
+      stroke: "#020617",
+      "stroke-width": "0.45",
       fill: color
     });
     lineas.forEach(function (linea, idx) {
@@ -1532,21 +1708,66 @@ class FlujoLayout {
   function dibujarNodo(svg, nodo, pos, cfg) {
     const estilo = COLORES_NODO[nodo.tipo] || COLORES_NODO.proceso;
     const grupo = crearSVG("g", { class: "flujomate-nodo flujomate-" + nodo.tipo, "data-id": nodo.id });
+    if (cfg.sombraNodos) grupo.setAttribute("filter", "url(#" + idSVG(cfg, "shadow") + ")");
     if (nodo.tipo === "decision") {
       const cx = pos.x + pos.width / 2;
       const cy = pos.y + pos.height / 2;
       const puntos = [[cx, pos.y], [pos.x + pos.width, cy], [cx, pos.y + pos.height], [pos.x, cy]].map(p => p.join(",")).join(" ");
-      grupo.appendChild(crearSVG("polygon", { points: puntos, fill: estilo.fill, stroke: estilo.stroke, "stroke-width": cfg.strokeWidth }));
+      grupo.appendChild(crearSVG("polygon", {
+        points: puntos,
+        fill: fillNodo(nodo.tipo, estilo, cfg),
+        stroke: estilo.stroke,
+        "stroke-width": cfg.strokeWidth,
+        "stroke-linejoin": "round"
+      }));
+      if (cfg.mostrarAcentoNodos) {
+        grupo.appendChild(crearSVG("circle", {
+          cx,
+          cy: pos.y + 18,
+          r: 4,
+          fill: estilo.accent,
+          opacity: "0.9"
+        }));
+      }
     } else {
       grupo.appendChild(crearSVG("rect", {
         x: pos.x, y: pos.y, width: pos.width, height: pos.height,
         rx: (nodo.tipo === "inicio" || nodo.tipo === "fin") ? cfg.radio : cfg.radioNodo,
         ry: (nodo.tipo === "inicio" || nodo.tipo === "fin") ? cfg.radio : cfg.radioNodo,
-        fill: estilo.fill,
+        fill: fillNodo(nodo.tipo, estilo, cfg),
         stroke: estilo.stroke,
         "stroke-width": nodo.tipo === "resultado" ? cfg.strokeWidth + 1 : cfg.strokeWidth,
         "stroke-dasharray": nodo.tipo === "referencia" ? "6 4" : ""
       }));
+      if (cfg.bordeSuaveNodos) {
+        grupo.appendChild(crearSVG("rect", {
+          x: pos.x + 1.5,
+          y: pos.y + 1.5,
+          width: Math.max(0, pos.width - 3),
+          height: Math.max(0, pos.height - 3),
+          rx: Math.max(0, ((nodo.tipo === "inicio" || nodo.tipo === "fin") ? cfg.radio : cfg.radioNodo) - 2),
+          ry: Math.max(0, ((nodo.tipo === "inicio" || nodo.tipo === "fin") ? cfg.radio : cfg.radioNodo) - 2),
+          fill: "none",
+          stroke: cfg.bordeSuaveColor,
+          "stroke-width": "1",
+          opacity: String(cfg.bordeSuaveOpacity)
+        }));
+      }
+      if (cfg.mostrarAcentoNodos) {
+        const accentX = pos.x + 12;
+        const accentY = pos.y + 12;
+        const accentH = Math.max(12, pos.height - 24);
+        grupo.appendChild(crearSVG("rect", {
+          x: accentX,
+          y: accentY,
+          width: cfg.anchoAcentoNodo,
+          height: accentH,
+          rx: cfg.anchoAcentoNodo / 2,
+          ry: cfg.anchoAcentoNodo / 2,
+          fill: estilo.accent,
+          opacity: "0.9"
+        }));
+      }
     }
     const maxChars = nodo.tipo === "decision" ? cfg.maxCharsDecision : cfg.maxCharsNodo;
     const lineas = medirLineasTexto(nodo.texto, maxChars);
@@ -1563,17 +1784,499 @@ class FlujoLayout {
     const alto = cfg.etiquetaHeight;
     svg.appendChild(crearSVG("rect", {
       x: x - ancho / 2, y: y - alto / 2, width: ancho, height: alto,
-      rx: cfg.etiquetaRadius, ry: cfg.etiquetaRadius, fill: "#ffffff", opacity: String(cfg.etiquetaOpacity)
+      rx: cfg.etiquetaRadius,
+      ry: cfg.etiquetaRadius,
+      fill: cfg.etiquetaFill,
+      stroke: cfg.etiquetaStroke,
+      "stroke-width": "1",
+      opacity: String(cfg.etiquetaOpacity),
+      filter: cfg.etiquetaShadow ? "url(#" + idSVG(cfg, "connection-glow") + ")" : ""
     }));
     const label = crearSVG("text", {
       x, y: y + cfg.etiquetaTextBaselineAdjust,
       "text-anchor": "middle",
       "font-family": cfg.fontFamily,
       "font-size": Math.max(12, cfg.fontSize - cfg.etiquetaFontDelta),
+      "font-weight": "700",
+      "paint-order": "stroke",
+      stroke: "#020617",
+      "stroke-width": "0.5",
       fill: color
     });
     label.textContent = texto;
     svg.appendChild(label);
+  }
+
+  function limpiarGrupo(grupo) {
+    while (grupo && grupo.firstChild) grupo.removeChild(grupo.firstChild);
+  }
+
+  function claveConexion(idx) {
+    return "conexion-" + idx;
+  }
+
+  function crearEstadoConexiones(capa, diagrama) {
+    limpiarGrupo(capa);
+    const estado = {
+      capa,
+      grupos: new Map(),
+      indicesPorNodo: new Map()
+    };
+    (diagrama.conexiones || []).forEach((conexion, idx) => {
+      const clave = claveConexion(idx);
+      const grupo = crearSVG("g", {
+        class: "flujomate-conexion-grupo",
+        "data-key": clave,
+        "data-desde": conexion.desde,
+        "data-hacia": conexion.hacia
+      });
+      estado.grupos.set(clave, grupo);
+      capa.appendChild(grupo);
+
+      [conexion.desde, conexion.hacia].forEach(idNodo => {
+        if (!estado.indicesPorNodo.has(idNodo)) estado.indicesPorNodo.set(idNodo, []);
+        estado.indicesPorNodo.get(idNodo).push(idx);
+      });
+    });
+    return estado;
+  }
+
+  function renderizarConexionPorIndice(estado, diagrama, layout, cfg, idx, rutasOcupadas, opciones) {
+    const conexion = diagrama.conexiones[idx];
+    if (!conexion || !estado) return;
+    const grupo = estado.grupos.get(claveConexion(idx));
+    if (!grupo) return;
+    limpiarGrupo(grupo);
+    const desde = layout.posiciones.get(conexion.desde);
+    const hacia = layout.posiciones.get(conexion.hacia);
+    if (!desde || !hacia) return;
+    dibujarConexion(grupo, conexion, desde, hacia, cfg, layout, diagrama, rutasOcupadas || [], opciones || {});
+  }
+
+  function renderizarConexiones(capa, diagrama, layout, cfg, estado, opciones) {
+    const estadoFinal = estado || crearEstadoConexiones(capa, diagrama);
+    const rutasOcupadas = [];
+    (diagrama.conexiones || []).forEach((c, idx) => {
+      renderizarConexionPorIndice(estadoFinal, diagrama, layout, cfg, idx, rutasOcupadas, opciones);
+    });
+    return estadoFinal;
+  }
+
+  function actualizarConexionesDeNodo(estado, idNodo, diagrama, layout, cfg, opciones) {
+    if (!estado || !idNodo) return;
+    const indices = estado.indicesPorNodo.get(idNodo) || [];
+    indices.forEach(idx => {
+      renderizarConexionPorIndice(estado, diagrama, layout, cfg, idx, [], opciones || {});
+    });
+  }
+
+  function renderizarNodos(capa, diagrama, layout, cfg) {
+    limpiarGrupo(capa);
+    diagrama.nodos.forEach(nodo => {
+      const pos = layout.posiciones.get(nodo.id);
+      if (!pos) return;
+      dibujarNodo(capa, nodo, pos, cfg);
+    });
+  }
+
+  function clonarPosiciones(posiciones) {
+    const copia = new Map();
+    posiciones.forEach((pos, id) => copia.set(id, Object.assign({}, pos)));
+    return copia;
+  }
+
+  function restaurarPosiciones(destino, origen, diagrama) {
+    origen.forEach((posOriginal, id) => {
+      const actual = destino.get(id);
+      if (!actual) return;
+      Object.assign(actual, posOriginal);
+      const nodo = diagrama.getNodo(id);
+      if (nodo) {
+        nodo.x = actual.x;
+        nodo.y = actual.y;
+      }
+    });
+  }
+
+  function resaltarConexionesNodo(capaConexiones, idNodo, cfg) {
+    if (!capaConexiones || !idNodo) return;
+    capaConexiones.querySelectorAll(".flujomate-conexion").forEach(path => {
+      const conectado = path.getAttribute("data-desde") === idNodo || path.getAttribute("data-hacia") === idNodo;
+      path.classList.toggle("flujomate-conexion-activa", conectado);
+      path.classList.toggle("flujomate-conexion-atenuada", !conectado);
+      path.setAttribute("stroke-width", conectado ? cfg.conexionWidth + cfg.conexionHoverWidthExtra : cfg.conexionWidth);
+      path.setAttribute("opacity", conectado ? cfg.conexionHoverOpacity : cfg.conexionOpacity);
+    });
+  }
+
+  function limpiarResaltadoConexiones(capaConexiones, cfg) {
+    if (!capaConexiones) return;
+    capaConexiones.querySelectorAll(".flujomate-conexion").forEach(path => {
+      path.classList.remove("flujomate-conexion-activa", "flujomate-conexion-atenuada");
+      path.setAttribute("stroke-width", cfg.conexionWidth);
+      path.setAttribute("opacity", String(cfg.conexionOpacity));
+    });
+  }
+
+  function habilitarHoverNodos(capaNodos, capaConexiones, cfg) {
+    capaNodos.querySelectorAll(".flujomate-nodo").forEach(grupo => {
+      grupo.addEventListener("pointerenter", function () {
+        resaltarConexionesNodo(capaConexiones, grupo.getAttribute("data-id"), cfg);
+      });
+      grupo.addEventListener("pointerleave", function () {
+        limpiarResaltadoConexiones(capaConexiones, cfg);
+      });
+    });
+  }
+
+  function calcularBoundsContenido(layout, padding) {
+    const pad = padding || 0;
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity;
+    layout.posiciones.forEach(pos => {
+      minX = Math.min(minX, pos.x);
+      minY = Math.min(minY, pos.y);
+      maxX = Math.max(maxX, pos.x + pos.width);
+      maxY = Math.max(maxY, pos.y + pos.height);
+    });
+    if (!Number.isFinite(minX)) return { x: 0, y: 0, width: 1, height: 1 };
+    return {
+      x: minX - pad,
+      y: minY - pad,
+      width: Math.max(1, maxX - minX + pad * 2),
+      height: Math.max(1, maxY - minY + pad * 2)
+    };
+  }
+
+  function aplicarCamara(svg, camara) {
+    svg.setAttribute("viewBox", [camara.x, camara.y, camara.width, camara.height].join(" "));
+  }
+
+  function crearCamaraInicial(svg, layout, cfg) {
+    const bounds = calcularBoundsContenido(layout, cfg.viewportPadding);
+    const aspect = cfg.viewportAncho / cfg.viewportAlto;
+    let width = bounds.width;
+    let height = bounds.height;
+    if (width / height > aspect) height = width / aspect;
+    else width = height * aspect;
+    const camara = {
+      x: bounds.x + bounds.width / 2 - width / 2,
+      y: bounds.y + bounds.height / 2 - height / 2,
+      width,
+      height,
+      baseWidth: width
+    };
+    aplicarCamara(svg, camara);
+    return camara;
+  }
+
+  function enfocarContenido(svg, layout, cfg, camara) {
+    const bounds = calcularBoundsContenido(layout, cfg.viewportPadding);
+    enfocarBounds(svg, cfg, camara, bounds);
+  }
+
+  function enfocarBounds(svg, cfg, camara, bounds) {
+    const aspect = cfg.viewportAncho / cfg.viewportAlto;
+    let width = bounds.width;
+    let height = bounds.height;
+    if (width / height > aspect) height = width / aspect;
+    else width = height * aspect;
+    camara.x = bounds.x + bounds.width / 2 - width / 2;
+    camara.y = bounds.y + bounds.height / 2 - height / 2;
+    camara.width = width;
+    camara.height = height;
+    camara.baseWidth = width;
+    aplicarCamara(svg, camara);
+  }
+
+  function enfocarElementoSVG(svg, elemento, cfg, camara) {
+    if (!elemento || typeof elemento.getBBox !== "function") {
+      enfocarContenido(svg, { posiciones: new Map() }, cfg, camara);
+      return;
+    }
+    let bbox;
+    try { bbox = elemento.getBBox(); }
+    catch (e) { bbox = null; }
+    if (!bbox || !Number.isFinite(bbox.x)) return;
+    enfocarBounds(svg, cfg, camara, {
+      x: bbox.x - cfg.viewportPadding,
+      y: bbox.y - cfg.viewportPadding,
+      width: Math.max(1, bbox.width + cfg.viewportPadding * 2),
+      height: Math.max(1, bbox.height + cfg.viewportPadding * 2)
+    });
+  }
+
+  function zoomCamara(svg, camara, cfg, factor, centro) {
+    const minWidth = camara.baseWidth / cfg.zoomMax;
+    const maxWidth = camara.baseWidth / cfg.zoomMin;
+    const nextWidth = Math.min(maxWidth, Math.max(minWidth, camara.width / factor));
+    const nextHeight = nextWidth * (cfg.viewportAlto / cfg.viewportAncho);
+    const c = centro || { x: camara.x + camara.width / 2, y: camara.y + camara.height / 2 };
+    const relX = (c.x - camara.x) / camara.width;
+    const relY = (c.y - camara.y) / camara.height;
+    camara.x = c.x - nextWidth * relX;
+    camara.y = c.y - nextHeight * relY;
+    camara.width = nextWidth;
+    camara.height = nextHeight;
+    aplicarCamara(svg, camara);
+  }
+
+  function crearBotonControl(texto, titulo, cfg, onClick) {
+    const boton = document.createElement("button");
+    boton.type = "button";
+    boton.textContent = texto;
+      boton.title = titulo;
+      boton.setAttribute("aria-label", titulo);
+    boton.style.width = "36px";
+    boton.style.height = "36px";
+    boton.style.minWidth = texto.length > 3 ? "64px" : "36px";
+    boton.style.border = "1px solid " + cfg.controlStroke;
+    boton.style.background = cfg.controlFill;
+    boton.style.color = cfg.controlText;
+    boton.style.borderRadius = "9px";
+    boton.style.font = "800 13px Inter, Segoe UI, Arial, sans-serif";
+    boton.style.letterSpacing = "0";
+    boton.style.cursor = "pointer";
+    boton.style.textTransform = texto.length > 2 ? "uppercase" : "none";
+    boton.style.boxShadow = "0 0 18px rgba(56, 189, 248, 0.20), inset 0 0 16px rgba(56, 189, 248, 0.12)";
+    boton.addEventListener("mouseenter", () => {
+      boton.style.background = "rgba(14, 31, 55, 0.96)";
+      boton.style.boxShadow = "0 0 24px rgba(56, 189, 248, 0.34), inset 0 0 18px rgba(56, 189, 248, 0.18)";
+    });
+    boton.addEventListener("mouseleave", () => {
+      boton.style.background = cfg.controlFill;
+      boton.style.boxShadow = "0 0 18px rgba(56, 189, 248, 0.20), inset 0 0 16px rgba(56, 189, 248, 0.12)";
+    });
+    boton.addEventListener("click", onClick);
+    return boton;
+  }
+
+  function crearMarcoGrafico(svg, layout, cfg, camara, onFit, onReset) {
+    const marco = document.createElement("div");
+    marco.className = "flujomate-marco";
+    marco.style.position = "relative";
+    marco.style.width = cfg.viewportAncho + "px";
+    marco.style.maxWidth = "100%";
+    marco.style.height = cfg.viewportAlto + "px";
+    marco.style.margin = "0 auto";
+    marco.style.border = "1px solid " + cfg.marcoStroke;
+    marco.style.borderRadius = "18px";
+    marco.style.overflow = "hidden";
+    marco.style.background = cfg.fondoDiagrama;
+    marco.style.boxShadow = cfg.marcoShadow;
+    marco.appendChild(svg);
+
+    if (cfg.controlesZoom) {
+      const controles = document.createElement("div");
+      controles.className = "flujomate-controles-zoom";
+      controles.style.position = "absolute";
+      controles.style.right = "12px";
+      controles.style.top = "12px";
+      controles.style.display = "flex";
+      controles.style.gap = "8px";
+      controles.style.zIndex = "2";
+      controles.style.padding = "8px";
+      controles.style.border = "1px solid rgba(125, 211, 252, 0.24)";
+      controles.style.borderRadius = "14px";
+      controles.style.background = "rgba(3, 7, 18, 0.42)";
+      controles.style.backdropFilter = "blur(8px)";
+      controles.appendChild(crearBotonControl("+", "Acercar", cfg, () => zoomCamara(svg, camara, cfg, cfg.zoomPaso)));
+      controles.appendChild(crearBotonControl("-", "Alejar", cfg, () => zoomCamara(svg, camara, cfg, 1 / cfg.zoomPaso)));
+      controles.appendChild(crearBotonControl("Fit", "Encajar diagrama", cfg, () => {
+        if (typeof onFit === "function") onFit();
+        else enfocarContenido(svg, layout, cfg, camara);
+      }));
+      controles.appendChild(crearBotonControl("Reset", "Resetear posiciones", cfg, () => {
+        if (typeof onReset !== "function") return;
+        const confirmar = window.confirm("¿Seguro que quieres resetear el diagrama? Se perderán los ajustes manuales de posición.");
+        if (confirmar) onReset();
+      }));
+      marco.appendChild(controles);
+    }
+
+    return marco;
+  }
+
+  function habilitarZoomRueda(svg, cfg, camara) {
+    svg.addEventListener("wheel", function (evento) {
+      evento.preventDefault();
+      const centro = puntoEventoSVG(svg, evento);
+      const factor = evento.deltaY < 0 ? cfg.zoomPaso : 1 / cfg.zoomPaso;
+      zoomCamara(svg, camara, cfg, factor, centro);
+    }, { passive: false });
+  }
+
+  function habilitarPanFondo(svg, camara) {
+    let pan = null;
+
+    svg.addEventListener("pointerdown", function (evento) {
+      if (evento.target.closest && evento.target.closest(".flujomate-nodo")) return;
+      if (evento.button != null && evento.button !== 0) return;
+      const p = puntoEventoSVG(svg, evento);
+      pan = {
+        pointerId: evento.pointerId,
+        startX: p.x,
+        startY: p.y,
+        camX: camara.x,
+        camY: camara.y
+      };
+      svg.setPointerCapture(evento.pointerId);
+      svg.style.cursor = "move";
+    });
+
+    svg.addEventListener("pointermove", function (evento) {
+      if (!pan || pan.pointerId !== evento.pointerId) return;
+      const p = puntoEventoSVG(svg, evento);
+      camara.x = pan.camX - (p.x - pan.startX);
+      camara.y = pan.camY - (p.y - pan.startY);
+      aplicarCamara(svg, camara);
+    });
+
+    function terminarPan(evento) {
+      if (!pan || pan.pointerId !== evento.pointerId) return;
+      pan = null;
+      svg.style.cursor = "";
+    }
+
+    svg.addEventListener("pointerup", terminarPan);
+    svg.addEventListener("pointercancel", terminarPan);
+  }
+
+  function pedirFrame(callback) {
+    if (window.requestAnimationFrame) return window.requestAnimationFrame(callback);
+    return window.setTimeout(callback, 16);
+  }
+
+  function cancelarFrame(id) {
+    if (id == null) return;
+    if (window.cancelAnimationFrame) window.cancelAnimationFrame(id);
+    else window.clearTimeout(id);
+  }
+
+  function puntoEventoSVG(svg, evento) {
+    const pt = svg.createSVGPoint();
+    pt.x = evento.clientX;
+    pt.y = evento.clientY;
+    return pt.matrixTransform(svg.getScreenCTM().inverse());
+  }
+
+  function habilitarArrastreNodos(svg, capaNodos, capaConexiones, estadoConexiones, diagrama, layout, cfg) {
+    if (!cfg.interactivoMover) return;
+
+    let drag = null;
+    const estiloUsuarioOriginal = document.body ? document.body.style.userSelect : "";
+
+    function actualizarArrastreDesdeEvento(evento) {
+      if (!drag || drag.pointerId !== evento.pointerId) return;
+      const pos = layout.posiciones.get(drag.id);
+      const nodo = diagrama.getNodo(drag.id);
+      if (!pos || !nodo) return;
+
+      evento.preventDefault();
+      evento.stopPropagation();
+      const p = puntoEventoSVG(svg, evento);
+      const dx = p.x - drag.startMouseX;
+      const dy = p.y - drag.startMouseY;
+
+      pos.x = drag.startX + dx;
+      pos.y = drag.startY + dy;
+      nodo.x = pos.x;
+      nodo.y = pos.y;
+      drag.grupo.setAttribute("transform", "translate(" + dx + " " + dy + ")");
+      programarActualizacionArrastre();
+    }
+
+    function removerSeguimientoGlobal() {
+      window.removeEventListener("pointermove", actualizarArrastreDesdeEvento, true);
+      window.removeEventListener("pointerup", finalizarArrastre, true);
+      window.removeEventListener("pointercancel", finalizarArrastre, true);
+      window.removeEventListener("blur", finalizarArrastre, true);
+      if (document.body) document.body.style.userSelect = estiloUsuarioOriginal;
+      svg.style.cursor = "";
+    }
+
+    function instalarSeguimientoGlobal() {
+      window.addEventListener("pointermove", actualizarArrastreDesdeEvento, true);
+      window.addEventListener("pointerup", finalizarArrastre, true);
+      window.addEventListener("pointercancel", finalizarArrastre, true);
+      window.addEventListener("blur", finalizarArrastre, true);
+      if (document.body) document.body.style.userSelect = "none";
+      svg.style.cursor = cfg.cursorMoviendo;
+    }
+
+    function finalizarArrastre() {
+      if (!drag) return;
+      removerSeguimientoGlobal();
+      cancelarFrame(drag.frameId);
+      if (drag.grupo) {
+        drag.grupo.removeAttribute("transform");
+        drag.grupo.style.cursor = cfg.cursorMover;
+        try { drag.grupo.releasePointerCapture(drag.pointerId); } catch (e) {}
+      }
+      try { svg.releasePointerCapture(drag.pointerId); } catch (e) {}
+      limpiarResaltadoConexiones(capaConexiones, cfg);
+      renderizarConexiones(capaConexiones, diagrama, layout, cfg, estadoConexiones);
+      renderizarNodos(capaNodos, diagrama, layout, cfg);
+      habilitarArrastreNodos(svg, capaNodos, capaConexiones, estadoConexiones, diagrama, layout, cfg);
+      habilitarHoverNodos(capaNodos, capaConexiones, cfg);
+      drag = null;
+    }
+
+    function programarActualizacionArrastre() {
+      if (!drag || drag.frameId != null) return;
+      drag.frameId = pedirFrame(function () {
+        if (!drag) return;
+        drag.frameId = null;
+        actualizarConexionesDeNodo(
+          estadoConexiones,
+          drag.id,
+          diagrama,
+          layout,
+          cfg,
+          { arrastreLigero: cfg.arrastreRutasLigeras }
+        );
+        resaltarConexionesNodo(capaConexiones, drag.id, cfg);
+      });
+    }
+
+    capaNodos.querySelectorAll(".flujomate-nodo").forEach(grupo => {
+      grupo.style.cursor = cfg.cursorMover;
+      grupo.style.touchAction = "none";
+
+      grupo.addEventListener("pointerdown", function (evento) {
+        const id = grupo.getAttribute("data-id");
+        const pos = layout.posiciones.get(id);
+        if (!id || !pos) return;
+
+        evento.preventDefault();
+        evento.stopPropagation();
+        try { grupo.setPointerCapture(evento.pointerId); } catch (e) {}
+        try { svg.setPointerCapture(evento.pointerId); } catch (e) {}
+        capaNodos.appendChild(grupo);
+
+        const p = puntoEventoSVG(svg, evento);
+        drag = {
+          id,
+          grupo,
+          pointerId: evento.pointerId,
+          startMouseX: p.x,
+          startMouseY: p.y,
+          startX: pos.x,
+          startY: pos.y,
+          frameId: null
+        };
+        grupo.style.cursor = cfg.cursorMoviendo;
+        instalarSeguimientoGlobal();
+        resaltarConexionesNodo(capaConexiones, id, cfg);
+      });
+
+      grupo.addEventListener("pointermove", function (evento) {
+        if (!drag || drag.grupo !== grupo || drag.pointerId !== evento.pointerId) return;
+        actualizarArrastreDesdeEvento(evento);
+      });
+
+      grupo.addEventListener("pointerup", finalizarArrastre);
+      grupo.addEventListener("pointercancel", finalizarArrastre);
+    });
   }
 
 
@@ -1838,15 +2541,39 @@ function elegirRutaCompletaSinChoque(
   return simplificarRuta(fallback);
 }
 
+function elegirRutaArrastreLigera(a, a2, b2, b, nodoDesde, nodoHacia) {
+  const inicio = nodoDesde?.tipo === "decision" ? clonarPunto(a2) : clonarPunto(a);
+  const fin = nodoHacia?.tipo === "decision" ? clonarPunto(b2) : clonarPunto(b);
+  const dx = Math.abs(fin.x - inicio.x);
+  const dy = Math.abs(fin.y - inicio.y);
+  const centroX = (inicio.x + fin.x) / 2;
+  const centroY = (inicio.y + fin.y) / 2;
+  const puntos = [clonarPunto(a)];
+
+  if (nodoDesde?.tipo === "decision") puntos.push(clonarPunto(a2));
+  if (dx > dy) {
+    puntos.push({ x: centroX, y: inicio.y });
+    puntos.push({ x: centroX, y: fin.y });
+  } else {
+    puntos.push({ x: inicio.x, y: centroY });
+    puntos.push({ x: fin.x, y: centroY });
+  }
+  if (nodoHacia?.tipo === "decision") puntos.push(clonarPunto(b2));
+  puntos.push(clonarPunto(b));
+
+  return simplificarRuta(puntos);
+}
 
 
-function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagrama, rutasOcupadas) {
+
+function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagrama, rutasOcupadas, opciones) {
   if (!svg || !conexion || !posDesde || !posHacia) return;
 
   const semantica = conexion.semantica || "flujo";
   const estilo = conexion.estilo || "solida";
   const etiqueta = conexion.etiqueta || "";
   const color = COLORES_CONEXION[semantica] || "#666";
+  const arrastreLigero = !!(opciones && opciones.arrastreLigero);
 
   const nodoDesde = diagrama ? diagrama.getNodo(conexion.desde) : null;
   const nodoHacia = diagrama ? diagrama.getNodo(conexion.hacia) : null;
@@ -1898,23 +2625,25 @@ function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagram
     registrarRutaOcupada(segmentosDeRuta(puntos), rutasOcupadas);
 
   } else {
-    const rutaFinal = elegirRutaCompletaSinChoque(
-      a,
-      a2,
-      b2,
-      b,
-      nodoDesde,
-      nodoHacia,
-      layout,
-      conexion,
-      rutasOcupadas,
-      cfg
-    );
+    const rutaFinal = arrastreLigero
+      ? elegirRutaArrastreLigera(a, a2, b2, b, nodoDesde, nodoHacia)
+      : elegirRutaCompletaSinChoque(
+        a,
+        a2,
+        b2,
+        b,
+        nodoDesde,
+        nodoHacia,
+        layout,
+        conexion,
+        rutasOcupadas,
+        cfg
+      );
 
     d = rutaAPath(rutaFinal);
 
     const segs = segmentosDeRuta(rutaFinal);
-    registrarRutaOcupada(segs, rutasOcupadas);
+    if (!arrastreLigero) registrarRutaOcupada(segs, rutasOcupadas);
 
     if (rutaFinal.length >= 3) {
       const mid = rutaFinal[Math.floor(rutaFinal.length / 2)];
@@ -1923,17 +2652,27 @@ function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagram
     }
   }
 
-  svg.appendChild(crearSVG("path", {
+  const pathConexion = crearSVG("path", {
+    class: "flujomate-conexion",
+    "data-desde": conexion.desde,
+    "data-hacia": conexion.hacia,
+    "data-semantica": semantica,
     d: d,
     fill: "none",
     stroke: color,
-    "stroke-width": 2,
+    "stroke-width": cfg.conexionWidth,
+    "stroke-linecap": "round",
+    "stroke-linejoin": "round",
+    opacity: String(cfg.conexionOpacity),
+    filter: cfg.brilloConexiones ? "url(#" + idSVG(cfg, "connection-glow") + ")" : "",
     "stroke-dasharray":
       (semantica === "anotacion" ||
        semantica === "referencia" ||
        estilo === "punteada") ? "6 4" : "",
-    "marker-end": markerPorColor(color)
-  }));
+    "marker-end": markerPorColor(color, cfg)
+  });
+  pathConexion.style.setProperty("--flujomate-conexion-width", String(cfg.conexionWidth));
+  svg.appendChild(pathConexion);
 
   if (etiqueta) {
     dibujarEtiquetaConexion(svg, etiquetaX, etiquetaY, etiqueta, color, cfg);
@@ -1974,6 +2713,9 @@ function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagram
       conexionRutaIntentos: "conexionRutaIntentos",
       conexionPasoAlternativo: "conexionPasoAlternativo",
       conexionMargenNodo: "conexionMargenNodo",
+      conexionWidth: "conexionWidth",
+      conexionOpacity: "conexionOpacity",
+      brilloConexiones: "brilloConexiones",
       conexionSeparacionMin: "conexionSeparacionMin",
       conexionZonaLibreFlecha: "conexionZonaLibreFlecha",
       conexionOffset: "conexionOffset",
@@ -1986,7 +2728,17 @@ function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagram
       margenX: "margenX",
       margenY: "margenY",
       maxCharsNodo: "maxCharsNodo",
-      maxCharsDecision: "maxCharsDecision"
+      maxCharsDecision: "maxCharsDecision",
+      interactivoMover: "interactivoMover",
+      viewportAncho: "viewportAncho",
+      viewportAlto: "viewportAlto",
+      viewportPadding: "viewportPadding",
+      zoomMin: "zoomMin",
+      zoomMax: "zoomMax",
+      zoomPaso: "zoomPaso",
+      controlesZoom: "controlesZoom",
+      arrastreRutasLigeras: "arrastreRutasLigeras",
+      fondoPatronOpacity: "fondoPatronOpacity"
     };
     const opciones = {};
     Object.keys(mapa).forEach(function (claveDataset) {
@@ -2003,6 +2755,7 @@ function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagram
       return null;
     }
     const cfg = Object.assign({}, CONFIG_DEFAULT, opciones || {});
+    cfg._uid = "r" + (++instanciaRender);
     const diagrama = FlujoDiagrama.desdeJSON(data, cfg);
     if (!diagrama.raiz) {
       contenedor.textContent = "flujomate: no se encontró nodo raíz.";
@@ -2013,43 +2766,80 @@ function dibujarConexion(svg, conexion, posDesde, posHacia, cfg, layout, diagram
       contenedor.textContent = "flujomate: el layout no generó posiciones.";
       return null;
     }
+    const posicionesIniciales = clonarPosiciones(layout.posiciones);
     if (data.titulo) {
       const titulo = document.createElement("div");
       titulo.className = "flujomate-titulo";
       titulo.textContent = data.titulo;
       titulo.style.fontFamily = cfg.fontFamily;
-      titulo.style.fontSize = "20px";
-      titulo.style.fontWeight = "700";
+      titulo.style.fontSize = "22px";
+      titulo.style.fontWeight = "800";
+      titulo.style.color = cfg.tituloColor;
+      titulo.style.letterSpacing = "0";
+      titulo.style.margin = "0 auto 14px";
+      titulo.style.maxWidth = cfg.viewportAncho + "px";
+      titulo.style.lineHeight = "1.2";
+      titulo.style.padding = "8px 12px";
+      titulo.style.borderLeft = "5px solid " + cfg.tituloSubrayado;
+      titulo.style.background = "linear-gradient(90deg, rgba(56, 189, 248, 0.14), rgba(124, 58, 237, 0.04))";
+      titulo.style.borderRadius = "12px";
+      titulo.style.textShadow = "0 0 18px rgba(56, 189, 248, 0.36)";
       contenedor.appendChild(titulo);
     }
     const svg = crearSVG("svg", {
-      width: layout.width,
-      height: layout.height,
-      viewBox: "0 0 " + layout.width + " " + layout.height,
+      width: cfg.viewportAncho,
+      height: cfg.viewportAlto,
       role: "img",
       "aria-label": data.titulo || "Diagrama de flujo matemático"
     });
+    const camara = crearCamaraInicial(svg, layout, cfg);
     svg.style.display = "block";
-    svg.style.margin = "0 auto";
-    svg.style.overflow = "visible";
+    svg.style.width = "100%";
+    svg.style.height = "100%";
+    svg.style.overflow = "hidden";
+    svg.style.userSelect = "none";
+    svg.style.webkitUserSelect = "none";
     definirMarcadores(svg, cfg);
-    const rutasOcupadas = [];
-    (diagrama.conexiones || []).forEach(c => {
-      const desde = layout.posiciones.get(c.desde);
-      const hacia = layout.posiciones.get(c.hacia);
-      if (!desde || !hacia) return;
-      dibujarConexion(svg, c, desde, hacia, cfg, layout, diagrama, rutasOcupadas);
-    });
-    diagrama.nodos.forEach(nodo => {
-      const pos = layout.posiciones.get(nodo.id);
-      if (!pos) return;
-      dibujarNodo(svg, nodo, pos, cfg);
-    });
-    contenedor.appendChild(svg);
+    dibujarFondoSVG(svg, layout.width, layout.height, cfg);
+    const capaContenido = crearSVG("g", { class: "flujomate-capa-contenido" });
+    const capaConexiones = crearSVG("g", { class: "flujomate-capa-conexiones" });
+    const capaNodos = crearSVG("g", { class: "flujomate-capa-nodos" });
+    capaContenido.appendChild(capaConexiones);
+    capaContenido.appendChild(capaNodos);
+    svg.appendChild(capaContenido);
+    const estadoConexiones = crearEstadoConexiones(capaConexiones, diagrama);
+    renderizarConexiones(capaConexiones, diagrama, layout, cfg, estadoConexiones);
+    renderizarNodos(capaNodos, diagrama, layout, cfg);
+    habilitarArrastreNodos(svg, capaNodos, capaConexiones, estadoConexiones, diagrama, layout, cfg);
+    habilitarHoverNodos(capaNodos, capaConexiones, cfg);
+    habilitarZoomRueda(svg, cfg, camara);
+    habilitarPanFondo(svg, camara);
+    const enfocarTodo = () => enfocarElementoSVG(svg, capaContenido, cfg, camara);
+    const resetearTodo = () => {
+      restaurarPosiciones(layout.posiciones, posicionesIniciales, diagrama);
+      limpiarResaltadoConexiones(capaConexiones, cfg);
+      renderizarConexiones(capaConexiones, diagrama, layout, cfg, estadoConexiones);
+      renderizarNodos(capaNodos, diagrama, layout, cfg);
+      habilitarArrastreNodos(svg, capaNodos, capaConexiones, estadoConexiones, diagrama, layout, cfg);
+      habilitarHoverNodos(capaNodos, capaConexiones, cfg);
+      enfocarTodo();
+    };
+    const marco = crearMarcoGrafico(svg, layout, cfg, camara, enfocarTodo, resetearTodo);
+    contenedor.appendChild(marco);
+    enfocarTodo();
     if (window.MathJax && typeof window.MathJax.typesetPromise === "function") {
       window.MathJax.typesetPromise([contenedor]).catch(() => {});
     }
-    return { svg, layout, diagrama };
+    return {
+      svg,
+      marco,
+      layout,
+      diagrama,
+      enfocar: enfocarTodo,
+      resetear: resetearTodo,
+      zoom: factor => zoomCamara(svg, camara, cfg, factor),
+      actualizarConexiones: () => renderizarConexiones(capaConexiones, diagrama, layout, cfg, estadoConexiones)
+    };
   }
 
   function autoRenderizar(selector, opciones) {
