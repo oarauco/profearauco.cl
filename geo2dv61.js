@@ -1864,9 +1864,12 @@
 
   function sceneUsesConstructionSchema(scene) {
     if (!scene || typeof scene !== 'object' || Array.isArray(scene)) return false;
-    if (scene.view && !scene.viewport) return true;
+    const objects = Array.isArray(scene.objects) ? scene.objects : [];
+    if (objects.some(raw => raw && typeof raw === 'object' && !Array.isArray(raw) && typeof raw.type === 'string' && typeof raw.kind !== 'string')) {
+      return false;
+    }
 
-    return Array.isArray(scene.objects) && scene.objects.some(raw => (
+    return objects.some(raw => (
       raw &&
       typeof raw === 'object' &&
       !Array.isArray(raw) &&
@@ -3065,11 +3068,12 @@
 
   function ensureScene(scene) {
     const source = scene && typeof scene === 'object' && !Array.isArray(scene) ? scene : {};
+    const viewportSource = source.viewport || source.view;
 
     return {
       version: DEFAULT_INTERNAL_SCENE.version,
       meta: mergeSceneSection(DEFAULT_INTERNAL_SCENE.meta, source.meta),
-      viewport: mergeSceneSection(DEFAULT_INTERNAL_SCENE.viewport, source.viewport),
+      viewport: mergeSceneSection(DEFAULT_INTERNAL_SCENE.viewport, viewportSource),
       style: mergeSceneSection(DEFAULT_INTERNAL_SCENE.style, source.style),
       objects: Array.isArray(source.objects) ? deepClone(source.objects) : []
     };
